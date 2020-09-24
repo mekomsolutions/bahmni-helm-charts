@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openmrs
+spec:
+  selector:
+    matchLabels:
+      app: openmrs
+  template:
+    metadata:
+      labels:
+        app: openmrs
+    spec:
+      volumes:
+        - name: openmrs-props
+          hostPath:
+            path: /mnt/properties
+        - name: distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+      containers:
+      - name: openmrs
+        image: mekomsolutions/openmrs
+        volumeMounts:
+            - name: distro
+              subPath: "openmrs_modules/"
+              mountPath: "/usr/local/tomcat/.OpenMRS/modules"
+            - name: distro
+              mountPath: "/usr/local/tomcat/.OpenMRS/configuration"
+              subPath: "openmrs_config/"
+            - name: openmrs-props
+              mountPath: "/etc/properties"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MODULE_WEB_ADMIN
+            value: "true"
+          - name: DB_AUTO_UPDATE
+            value: "true"
+          - name: DB_CREATE_TABLES
+            value: "true"
+          - name: DB_HOST
+            value: mysql
+          - name: DB_DATABASE
+            value: openmrs
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_PASSWORD
+      nodeSelector:
+        beta.kubernetes.io/arch: arm64

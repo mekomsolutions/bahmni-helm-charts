@@ -1,0 +1,32 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: distro
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: distro-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: distro
+  nfs:
+    path: /mnt/distro
+    server: master
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: distro-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: distro
+  accessModes:
+    - ReadWriteMany

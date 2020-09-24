@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: appointments
+  labels:
+    app: appointments
+spec:
+  selector:
+    app: appointments
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8903
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: appointments
+  anntation:
+    traefik.k8s.io/root-app: /appointments
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: appointments
+          servicePort: 80
+        path: /appointments

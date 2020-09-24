@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bahmni-home
+  labels:
+    app: bahmni-home
+spec:
+  selector:
+    app: bahmni-home
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8904
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: bahmni-home
+  anntation:
+    traefik.k8s.io/root-app: /bahmni-home
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: bahmni-home
+          servicePort: 80
+        path: /bahmni-home

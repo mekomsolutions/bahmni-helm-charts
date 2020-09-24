@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bahmniapps
+spec:
+  selector:
+    matchLabels:
+      app: bahmniapps
+  template:
+    metadata:
+      labels:
+        app: bahmniapps
+    spec:
+      volumes:
+        - name: distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+      containers:
+      - name: bahmniapps
+        image: mekomsolutions/bahmniapps
+        volumeMounts:
+            - name: distro
+              subPath: "bahmni_emr/bahmniapps/"
+              mountPath: "/var/www"
+        ports:
+        - containerPort: 8900
+      nodeSelector:
+        beta.kubernetes.io/arch: arm64

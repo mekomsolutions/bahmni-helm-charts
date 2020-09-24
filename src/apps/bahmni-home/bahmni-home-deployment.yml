@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bahmni-home
+spec:
+  selector:
+    matchLabels:
+      app: bahmni-home
+  template:
+    metadata:
+      labels:
+        app: bahmni-home
+    spec:
+      volumes:
+        - name: httpd-config-volume
+          confiMap:
+            name:  bahmni-home-httpd
+      containers:
+      - name: bahmni-home
+        image: httpd:2.4
+        volumeMounts:
+            - name: httpd-config-volume
+              mountPath: "/usr/local/apache2/conf/httpd.conf"
+        ports:
+        - containerPort: 8904

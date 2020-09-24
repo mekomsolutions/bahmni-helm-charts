@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      volumes:
+        - name: postgres-database
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+        - name: postgres-db-scripts-volume
+          configMap:
+            name: postgres-db-scripts
+      containers:
+        - name: postgres
+          image: postgres:9.6-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-database
+              mountPath: "/var/lib/postgresql/data"
+            - name: postgres-db-scripts-volume
+              mountPath: /docker-entrypoint-initdb.d
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER 
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_PORT
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_PASSWORD
+# Odoo Vars
+            - name: ODOO_DB_NAME 
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_NAME
+            - name: ODOO_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_USER
+            - name: ODOO_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_PASSWORD
+# Metabase Vars
+            - name: METABASE_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: metabase-configs
+                  key: METABASE_DB_NAME
+            - name: METABASE_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: metabase-configs
+                  key: METABASE_DB_USER
+            - name: METABASE_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: metabase-configs
+                  key: METABASE_DB_PASSWORD
+# Analytics Vars
+            - name: ANALYTICS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: analytics-configs
+                  key: ANALYTICS_DB_NAME
+            - name: ANALYTICS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: analytics-configs
+                  key: ANALYTICS_DB_USER
+            - name: ANALYTICS_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: analytics-configs
+                  key: ANALYTICS_DB_PASSWORD
+      nodeSelector:
+        role: storage

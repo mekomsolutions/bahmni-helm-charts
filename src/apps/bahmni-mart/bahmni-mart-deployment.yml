@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bahmni-mart
+spec:
+  selector:
+    matchLabels:
+      app: bahmni-mart
+  template:
+    metadata:
+      labels:
+        app: bahmni-mart
+    spec:
+      volumes:
+        - name: distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+      containers:
+      - name: bahmni-mart
+        image: mekomsolutions/bahmni-mart
+        volumeMounts:
+            - name: distro
+              mountPath: "var/www"
+              subPath: "bahmni_config/"
