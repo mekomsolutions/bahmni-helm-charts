@@ -12,9 +12,6 @@ spec:
         app: openmrs
     spec:
       volumes:
-        - name: openmrs-props
-          hostPath:
-            path: /mnt/properties
         - name: distro
           persistentVolumeClaim:
             claimName: distro-pvc
@@ -28,7 +25,8 @@ spec:
             - name: distro
               mountPath: "/usr/local/tomcat/.OpenMRS/configuration"
               subPath: "openmrs_config/"
-            - name: openmrs-props
+            - name: distro
+              subPath: "props"
               mountPath: "/etc/properties"
         ports:
         - containerPort: 8080
@@ -53,5 +51,3 @@ spec:
               configMapKeyRef:
                 name: openmrs-configs
                 key: OPENMRS_DB_PASSWORD
-      nodeSelector:
-        beta.kubernetes.io/arch: arm64

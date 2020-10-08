@@ -16,7 +16,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: bahmni-config
-  anntation:
+  annotations:
     traefik.k8s.io/root-app: /bahmni-config
 spec:
   rules:

@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bahmni-config
+  name: metabase
 spec:
   selector:
     matchLabels:
-      app: bahmni-config
+      app: metabase
   template:
     metadata:
       labels:
-        app: bahmni-config
+        app: metabase
     spec:
       volumes:
         - name: httpd-config-volume
@@ -19,7 +19,7 @@ spec:
           persistentVolumeClaim:
             claimName: distro-pvc
       containers:
-      - name: bahmni-config
+      - name: metabase
         image: mekomsolutions/metabase
         volumeMounts:
             - name: httpd-config-volume

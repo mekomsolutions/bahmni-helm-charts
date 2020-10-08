@@ -11,3 +11,18 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 8080
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: bahmni
+  annotations:
+    traefik.k8s.io/root-app: /openmrs
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: openmrs
+          servicePort: 80
+        path: /openmrs

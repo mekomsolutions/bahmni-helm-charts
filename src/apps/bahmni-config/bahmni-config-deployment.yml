@@ -12,20 +12,15 @@ spec:
         app: bahmni-config
     spec:
       volumes:
-        - name: httpd-config-volume
-          confiMap:
-            name:  bahmni-config-httpd
         - name: distro
           persistentVolumeClaim:
             claimName: distro-pvc
       containers:
       - name: bahmni-config
-        image: httpd:2.4
+        image: nginx:alpine
         volumeMounts:
-            - name: httpd-config-volume
-              mountPath: "/usr/local/apache2/conf/httpd.conf"
             - name: distro
-              mountPath: "/var/www"
               subPath: "bahmni_config/"
+              mountPath: "/usr/share/nginx/html/bahmni_config"
         ports:
-        - containerPort: 8901
+        - containerPort: 80

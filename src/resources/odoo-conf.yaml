@@ -14,4 +14,3 @@ data:
     without_demo = all
     workers = 4
     admin_passwd = ${ODOO_MASTER_PASSWORD}
-    

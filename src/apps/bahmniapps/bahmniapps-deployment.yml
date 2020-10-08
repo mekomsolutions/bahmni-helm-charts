@@ -20,8 +20,8 @@ spec:
         image: mekomsolutions/bahmniapps
         volumeMounts:
             - name: distro
-              subPath: "bahmni_emr/bahmniapps/"
-              mountPath: "/var/www"
+              subPath: "bahmni_emr/"
+              mountPath: "/var/www/"
         ports:
         - containerPort: 8900
       nodeSelector:

@@ -16,7 +16,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: bahmniapps
-  anntation:
+  annotations:
     traefik.k8s.io/root-app: /bahmniapps
 spec:
   rules:
@@ -26,3 +26,11 @@ spec:
           serviceName: bahmniapps
           servicePort: 80
         path: /bahmniapps
+      - backend:
+          serviceName: bahmniapps
+          servicePort: 80
+        path: /cgi-bin/systemdate
+      - backend:
+          serviceName: bahmniapps
+          servicePort: 80
+        path: /bahmni
