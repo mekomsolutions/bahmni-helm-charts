@@ -63,5 +63,3 @@ spec:
               configMapKeyRef:
                 name: odoo-configs
                 key: ODOO_MASTER_PASSWORD
-      nodeSelector:
-        beta.kubernetes.io/arch: arm64

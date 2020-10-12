@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openmrs
+  name: odoo-connect
 spec:
   selector:
     matchLabels:
@@ -13,7 +13,7 @@ spec:
     spec:
       volumes:
         - name: erp-config-volume
-          confiMap:
+          configMap:
             name:  erp-config
       containers:
       - name: odoo-connect
@@ -80,5 +80,3 @@ spec:
             value: password
           - name: APP_PROPERTIES_FILE
             value: "/usr/local/tomcat/erp-atomfeed.properties"
-      nodeSelector:
-        beta.kubernetes.io/arch: arm64

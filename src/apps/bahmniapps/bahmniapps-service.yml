@@ -30,7 +30,3 @@ spec:
           serviceName: bahmniapps
           servicePort: 80
         path: /cgi-bin/systemdate
-      - backend:
-          serviceName: bahmniapps
-          servicePort: 80
-        path: /bahmni

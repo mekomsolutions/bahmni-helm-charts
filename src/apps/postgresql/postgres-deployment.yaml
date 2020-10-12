@@ -96,4 +96,4 @@ spec:
                   name: analytics-configs
                   key: ANALYTICS_DB_PASSWORD
       nodeSelector:
-        role: storage
+        role: database

@@ -17,7 +17,7 @@ spec:
             name:  bahmni-home-httpd
       containers:
       - name: bahmni-home
-        image: httpd:2.4
+        image: nginx:alpine
         volumeMounts:
             - name: httpd-config-volume
               mountPath: "/usr/local/apache2/conf/httpd.conf"

@@ -26,7 +26,7 @@ spec:
         - key: role
           operator: In
           values:
-          - storage
+          - database
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

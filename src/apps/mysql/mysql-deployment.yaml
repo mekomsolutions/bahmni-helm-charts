@@ -48,4 +48,4 @@ spec:
                   name: mysql-configs
                   key: MYSQL_ROOT_PASSWORD
       nodeSelector:
-        role: storage
+        role: database
