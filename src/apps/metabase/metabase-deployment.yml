@@ -37,3 +37,4 @@ spec:
                 name: metabase-configs
                 key: METABASE_DB_PASSWORD
           - name: MB_DB_HOST
+            value: postgres

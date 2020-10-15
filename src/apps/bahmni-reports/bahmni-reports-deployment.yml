@@ -77,3 +77,26 @@ spec:
               configMapKeyRef:
                 name: mysql-configs
                 key: MYSQL_ROOT_PASSWORD
+          - name: REPORTS_DB_HOSTNAME
+            value: mysql
+          - name: REPORTS_DB_NAME
+            value: bahmni_reports
+          - name: REPORTS_DB_USERNAME
+            value: reports-user
+          - name: REPORTS_DB_PASSWORD
+            value: password
+          - name: OPENMRS_HOSTNAME
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_HOST
+          - name: OPENMRS_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_USER
+          - name: OPENMRS_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_PASSWORD
