@@ -18,6 +18,9 @@ spec:
         - name:  distro
           persistentVolumeClaim:
             claimName: distro-pvc
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-pvc
       containers:
       - name: odoo
         image: mekomsolutions/odoo
@@ -30,6 +33,12 @@ spec:
             - name: distro
               subPath: "odoo_addons/"
               mountPath: "/mnt/extra-addons"
+            - name: data
+              subPath: "odoo/filestore"
+              mountPath: "/var/lib/odoo/filestore"
+            - name: distro
+              subPath: "openmrs_config/"
+              mountPath: "/var/lib/odoo/filestore"
         ports:
         - containerPort: 8069
         env:

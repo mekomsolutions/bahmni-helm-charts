@@ -15,6 +15,9 @@ spec:
         - name: distro
           persistentVolumeClaim:
             claimName: distro-pvc
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-pvc
       containers:
       - name: openmrs
         image: mekomsolutions/openmrs
@@ -28,6 +31,12 @@ spec:
             - name: distro
               subPath: "props"
               mountPath: "/etc/properties"
+            - name: data
+              subPath: "openmrs/filestore"
+              mountPath: "/home/bahmni"
+            - name: data
+              subPath: "openmrs/checksum"
+              mountPath: "/usr/local/tomcat/.OpenMRS/configuration_checksums/"
         ports:
         - containerPort: 8080
         env:

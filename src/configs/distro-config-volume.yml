@@ -16,7 +16,7 @@ spec:
     - ReadWriteMany
   storageClassName: distro
   nfs:
-    path: /mnt/distro
+    path: /mnt/disks/ssd/data
     server: master
 ---
 kind: PersistentVolumeClaim
