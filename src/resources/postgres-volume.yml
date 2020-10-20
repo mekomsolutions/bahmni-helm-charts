@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   storageClassName: postgres-storage
   local:
-    path: /mnt/disks/ssd1/postgres-data
+    path: /mnt/disks/ssd1/postgresql
   nodeAffinity:
     required:
       nodeSelectorTerms:

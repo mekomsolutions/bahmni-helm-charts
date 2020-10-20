@@ -38,7 +38,7 @@ spec:
               mountPath: "/var/lib/odoo/filestore"
             - name: distro
               subPath: "openmrs_config/"
-              mountPath: "/var/lib/odoo/filestore"
+              mountPath: "/opt/openmrs-config"
         ports:
         - containerPort: 8069
         env:

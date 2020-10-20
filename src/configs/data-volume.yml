@@ -16,7 +16,7 @@ spec:
     - ReadWriteMany
   storageClassName: data
   nfs:
-    path: /mnt/disks/ssd/data
+    path: /mnt/disks/ssd1/data
     server: master
 ---
 kind: PersistentVolumeClaim

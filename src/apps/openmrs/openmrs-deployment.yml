@@ -12,6 +12,9 @@ spec:
         app: openmrs
     spec:
       volumes:
+        - name: openmrs-props
+          configMap:
+            name: openmrs-props
         - name: distro
           persistentVolumeClaim:
             claimName: distro-pvc
@@ -28,14 +31,13 @@ spec:
             - name: distro
               mountPath: "/usr/local/tomcat/.OpenMRS/configuration"
               subPath: "openmrs_config/"
-            - name: distro
-              subPath: "props"
+            - name: openmrs-props
               mountPath: "/etc/properties"
             - name: data
-              subPath: "openmrs/filestore"
-              mountPath: "/home/bahmni"
+              subPath: "openmrs/bahmni_filestore"
+              mountPath: "/usr/local/tomcat/.OpenMRS/bahmni_filestore"
             - name: data
-              subPath: "openmrs/checksum"
+              subPath: "openmrs/configuration_checksums"
               mountPath: "/usr/local/tomcat/.OpenMRS/configuration_checksums/"
         ports:
         - containerPort: 8080
