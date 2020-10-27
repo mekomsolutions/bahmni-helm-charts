@@ -10,7 +10,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 8904
+    targetPort: 80
 ---
 kind: Ingress
 apiVersion: extensions/v1beta1

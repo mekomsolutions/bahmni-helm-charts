@@ -12,9 +12,6 @@ spec:
         app: bahmni-home
     spec:
       volumes:
-        - name: httpd-config-volume
-          confiMap:
-            name:  bahmni-home-httpd
         - name: data
           persistentVolumeClaim:
             claimName: data-pvc
@@ -23,7 +20,7 @@ spec:
         image: nginx:alpine
         volumeMounts:
             - name: data
-              subPath: "openmrs/filestore"
+              subPath: "openmrs/bahmni_filestore"
               mountPath: "/usr/share/nginx/html/"
         ports:
         - containerPort: 80

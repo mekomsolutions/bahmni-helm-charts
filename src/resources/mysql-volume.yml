@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   storageClassName: mysql-storage
   local:
-    path: /mnt/disks/ssd1/mysql
+    path: mysql/
   nodeAffinity:
     required:
       nodeSelectorTerms:
