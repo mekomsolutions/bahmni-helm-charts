@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: bahmni-home
+  name: bahmni-filestore
   labels:
-    app: bahmni-home
+    app: bahmni-filestore
 spec:
   selector:
-    app: bahmni-home
+    app: bahmni-filestore
   ports:
   - protocol: TCP
     port: 80
@@ -15,14 +15,14 @@ spec:
 kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
-  name: bahmni-home
+  name: bahmni-filestore
   annotations:
-    traefik.k8s.io/root-app: /bahmni-home
+    traefik.k8s.io/root-app: /bahmni-filestore
 spec:
   rules:
   - http:
       paths:
       - backend:
-          serviceName: bahmni-home
+          serviceName: bahmni-filestore
           servicePort: 80
-        path: /bahmni-home
+        path: /bahmni-filestore

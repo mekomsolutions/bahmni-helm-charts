@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bahmni-home
+  name: bahmni-filestore
 spec:
   selector:
     matchLabels:
-      app: bahmni-home
+      app: bahmni-filestore
   template:
     metadata:
       labels:
-        app: bahmni-home
+        app: bahmni-filestore
     spec:
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: data-pvc
       containers:
-      - name: bahmni-home
+      - name: bahmni-filestore
         image: nginx:alpine
         volumeMounts:
             - name: data
