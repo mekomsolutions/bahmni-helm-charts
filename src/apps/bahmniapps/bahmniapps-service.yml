@@ -17,7 +17,7 @@ apiVersion: extensions/v1beta1
 metadata:
   name: bahmniapps
   annotations:
-    traefik.ingress.kubernetes.io/rewrite-target: /bahmniapps
+    traefik.ingress.kubernetes.io/rewrite-target: /bahmni
 spec:
   rules:
   - http:
