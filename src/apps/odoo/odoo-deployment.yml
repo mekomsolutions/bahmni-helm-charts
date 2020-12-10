@@ -12,6 +12,9 @@ spec:
         app: odoo
     spec:
       volumes:
+        - name: odoo-db
+          configMap:
+            name: odoo-db
         - name: odoo-props
           configMap:
             name: odoo-conf
@@ -21,6 +24,47 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: data-pvc
+      initContainers:
+        - name: init-db
+          image: postgres:alpine
+          volumeMounts:
+            - name: odoo-db
+              mountPath: "/mnt/"
+          command: ['sh', '-c', "bash /mnt/create_odoo_db.sh"]
+          env:
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER 
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_PASSWORD
+# Odoo Vars
+            - name: ODOO_DB_NAME 
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_NAME
+            - name: ODOO_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_USER
+            - name: ODOO_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_PASSWORD
       containers:
       - name: odoo
         image: mekomsolutions/odoo

@@ -12,17 +12,20 @@ spec:
     port: 80
     targetPort: 8080
 ---
+apiVersion: networking.k8s.io/v1
 kind: Ingress
-apiVersion: extensions/v1beta1
 metadata:
-  name: bahmni
+  name: openmrs
   annotations:
-    traefik.k8s.io/root-app: /openmrs
+    nginx.ingress.kubernetes.io/rewrite-target: /openmrs
 spec:
   rules:
   - http:
       paths:
-      - backend:
-          serviceName: openmrs
-          servicePort: 80
-        path: /openmrs
+      - path: /openmrs
+        pathType: Prefix
+        backend:
+          service:
+            name: openmrs
+            port:
+              number: 80

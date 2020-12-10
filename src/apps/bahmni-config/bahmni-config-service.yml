@@ -12,15 +12,18 @@ spec:
     port: 80
     targetPort: 80
 ---
+apiVersion: networking.k8s.io/v1
 kind: Ingress
-apiVersion: extensions/v1beta1
 metadata:
   name: bahmni-config
 spec:
   rules:
   - http:
       paths:
-      - backend:
-          serviceName: bahmni-config
-          servicePort: 80
-        path: /bahmni_config
+      - path: /bahmni_config
+        pathType: Prefix
+        backend:
+          service:
+            name: bahmni-config
+            port:
+              number: 80

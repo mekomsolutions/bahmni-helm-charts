@@ -27,25 +27,15 @@ spec:
             - mountPath: "/var/lib/mysql"
               name: mysql-database
           env:
-            - name: MYSQL_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: openmrs-configs
-                  key: OPENMRS_DB_NAME
-            - name: MYSQL_USER 
-              valueFrom:
-                configMapKeyRef:
-                  name: openmrs-configs
-                  key: OPENMRS_DB_USER
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: openmrs-configs
-                  key: OPENMRS_DB_PASSWORD
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 configMapKeyRef:
                   name: mysql-configs
                   key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_ROOT_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configs
+                  key: MYSQL_ROOT_USER
       nodeSelector:
         role: database
