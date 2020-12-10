@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bahmni-config
+spec:
+  selector:
+    matchLabels:
+      app: bahmni-config
+  template:
+    metadata:
+      labels:
+        app: bahmni-config
+    spec:
+      volumes:
+        - name: distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+      containers:
+      - name: bahmni-config
+        image: nginx:alpine
+        volumeMounts:
+            - name: distro
+              subPath: "bahmni_config/"
+              mountPath: "/usr/share/nginx/html/bahmni_config"
+        ports:
+        - containerPort: 80

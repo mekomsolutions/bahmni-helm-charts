@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: implementer-interface
+spec:
+  selector:
+    matchLabels:
+      app: implementer-interface
+  template:
+    metadata:
+      labels:
+        app: implementer-interface
+    spec:
+      volumes:
+        - name: distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+        - name: httpd-config
+          
+      containers:
+      - name: bahmniapps
+        image: mekomsolutions/implementer-interface
+        ports:
+        - containerPort: 8902

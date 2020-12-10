@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bahmni-reports
+  labels:
+    app: bahmni-reports
+spec:
+  selector:
+    app: bahmni-reports
+  ports:
+  - protocol: TCP
+    port: 8080
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: bahmni-reports
+  annotations:
+    traefik.k8s.io/root-app: /bahmni-reports
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: bahmni-reports
+          servicePort: 80
+        path: /bahmnireports

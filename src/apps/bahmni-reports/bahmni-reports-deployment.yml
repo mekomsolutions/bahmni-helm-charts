@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bahmni-reports
+spec:
+  selector:
+    matchLabels:
+      app: bahmni-reports
+  template:
+    metadata:
+      labels:
+        app: bahmni-reports
+    spec:
+      volumes:
+        - name: distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+      containers:
+      - name: bahmni-config
+        image: mekomsolutions/bahmni-reports
+        volumeMounts:
+            - name: distro
+              mountPath: "/var/www/bahmni_config"
+              subPath: "bahmni_config/"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: OPENMRS_DB_HOSTNAME 
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_HOST
+          - name: OPENMRS_DB_NAME
+            value: openmrs
+          - name: OPENMRS_DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_USER
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_PASSWORD
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_PASSWORD
+          - name:  ERP_DB_HOSTNAME
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_HOST
+          - name:  ERP_DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_DB_USER
+          - name:  ERP_DB_PASSWORD 
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_DB_PASSWORD
+          - name:  MYSQL_ROOT_USER
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-configs
+                key: MYSQL_ROOT_USER
+          - name:  MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-configs
+                key: MYSQL_ROOT_PASSWORD
+          - name:  MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-configs
+                key: MYSQL_ROOT_PASSWORD
+          - name: REPORTS_DB_HOSTNAME
+            value: mysql
+          - name: REPORTS_DB_NAME
+            value: bahmni_reports
+          - name: REPORTS_DB_USERNAME
+            value: reports-user
+          - name: REPORTS_DB_PASSWORD
+            value: password
+          - name: OPENMRS_HOSTNAME
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_HOST
+          - name: OPENMRS_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_USER
+          - name: OPENMRS_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_PASSWORD

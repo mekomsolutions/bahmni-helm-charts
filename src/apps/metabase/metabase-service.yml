@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: metabase
+  labels:
+    app: metabase
+spec:
+  type: LoadBalancer
+  selector:
+    app: metabase
+  ports:
+  - port: 9003
+    targetPort: 8901

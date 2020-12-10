@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo
+spec:
+  selector:
+    matchLabels:
+      app: odoo
+  template:
+    metadata:
+      labels:
+        app: odoo
+    spec:
+      volumes:
+        - name: odoo-db
+          configMap:
+            name: odoo-db
+        - name: odoo-props
+          configMap:
+            name: odoo-conf
+        - name:  distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-pvc
+      initContainers:
+        - name: init-db
+          image: postgres:alpine
+          volumeMounts:
+            - name: odoo-db
+              mountPath: "/mnt/"
+          command: ['sh', '-c', "bash /mnt/create_odoo_db.sh"]
+          env:
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER 
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_PASSWORD
+# Odoo Vars
+            - name: ODOO_DB_NAME 
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_NAME
+            - name: ODOO_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_USER
+            - name: ODOO_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: odoo-configs
+                  key: ODOO_DB_PASSWORD
+      containers:
+      - name: odoo
+        image: mekomsolutions/odoo
+        volumeMounts:
+            - name: odoo-props
+              mountPath: "/etc/properties/"
+            - name: distro
+              subPath: "odoo_config/"
+              mountPath: "/opt/odoo-config"
+            - name: distro
+              subPath: "odoo_addons/"
+              mountPath: "/mnt/extra-addons"
+            - name: data
+              subPath: "odoo/filestore"
+              mountPath: "/var/lib/odoo/filestore"
+            - name: distro
+              subPath: "openmrs_config/"
+              mountPath: "/opt/openmrs-config"
+        ports:
+        - containerPort: 8069
+        env:
+          - name: HOST
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-configs
+                key: POSTGRES_HOST
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-configs
+                key: POSTGRES_PORT
+          - name: USER
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_DB_USER
+          - name: PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_DB_PASSWORD
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_DB_NAME
+          - name: ODOO_MASTER_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_MASTER_PASSWORD

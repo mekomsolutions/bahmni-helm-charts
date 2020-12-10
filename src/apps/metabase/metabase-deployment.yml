@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metabase
+spec:
+  selector:
+    matchLabels:
+      app: metabase
+  template:
+    metadata:
+      labels:
+        app: metabase
+    spec:
+      containers:
+      - name: metabase
+        image: mekomsolutions/metabase
+        ports:
+        - containerPort: 3000
+        env:
+          - name: MB_DB_TYPE
+            value: postgres
+          - name: MB_DB_TYPE
+            value: "5432"
+          - name: MB_DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: metabase-configs
+                key: METABASE_DB_USER
+          - name: MB_DB_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: metabase-configs
+                key: METABASE_DB_NAME
+          - name: MB_DB_PASS
+            valueFrom:
+              configMapKeyRef:
+                name: metabase-configs
+                key: METABASE_DB_PASSWORD
+          - name: MB_DB_HOST
+            value: postgres

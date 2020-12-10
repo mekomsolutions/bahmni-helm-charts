@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openmrs
+spec:
+  selector:
+    matchLabels:
+      app: openmrs
+  template:
+    metadata:
+      labels:
+        app: openmrs
+    spec:
+      volumes:
+        - name: openmrs-props
+          configMap:
+            name: openmrs-props
+        - name: openmrs-db
+          configMap:
+            name: openmrs-db-script
+        - name: distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-pvc
+      initContainers:
+        - name: init-db
+          image: mariadb
+          volumeMounts:
+            - name: openmrs-db
+              mountPath: "/mnt/"
+          command: ['sh', '-c', "bash /mnt/create_openmrs_db.sh"]
+          env:
+            - name: OPENMRS_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: openmrs-configs
+                  key: OPENMRS_DB_HOST
+            - name: MYSQL_ROOT_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configs
+                  key: MYSQL_ROOT_USER
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configs
+                  key: MYSQL_ROOT_PASSWORD
+            - name: OPENMRS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: openmrs-configs
+                  key: OPENMRS_DB_NAME
+            - name: OPENMRS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: openmrs-configs
+                  key: OPENMRS_DB_USER
+            - name: OPENMRS_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: openmrs-configs
+                  key: OPENMRS_DB_PASSWORD
+      containers:
+      - name: openmrs
+        image: mekomsolutions/openmrs
+        volumeMounts:
+            - name: distro
+              subPath: "openmrs_modules/"
+              mountPath: "/usr/local/tomcat/.OpenMRS/modules"
+            - name: distro
+              mountPath: "/usr/local/tomcat/.OpenMRS/configuration"
+              subPath: "openmrs_config/"
+            - name: openmrs-props
+              mountPath: "/etc/properties"
+            - name: data
+              subPath: "openmrs/bahmni_filestore"
+              mountPath: "/usr/local/tomcat/.OpenMRS/bahmni_filestore"
+            - name: data
+              subPath: "openmrs/configuration_checksums"
+              mountPath: "/usr/local/tomcat/.OpenMRS/configuration_checksums/"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MODULE_WEB_ADMIN
+            value: "true"
+          - name: DB_AUTO_UPDATE
+            value: "true"
+          - name: DB_CREATE_TABLES
+            value: "true"
+          - name: DB_HOST
+            value: mysql
+          - name: DB_DATABASE
+            value: openmrs
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_PASSWORD
