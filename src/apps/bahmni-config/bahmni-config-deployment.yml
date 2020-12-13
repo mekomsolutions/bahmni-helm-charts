@@ -21,6 +21,6 @@ spec:
         volumeMounts:
             - name: distro
               subPath: "bahmni_config/"
-              mountPath: "/usr/share/nginx/html/bahmni_config"
+              mountPath: "/usr/share/nginx/html"
         ports:
         - containerPort: 80

@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxy-rules
+data:
+  proxy-rules: |
+    RewriteEngine on
+    RewriteCond %{REQUEST_URI} ^/$
+    RewriteRule (.*) /bahmni/home [R=301,L]
+    #
+    ProxyPass /openelis http://openelis:8080/openelis
+    ProxyPassReverse /openelis http://openelis:8080/openelis
+
+    # OpenMRS
+    ProxyPass /openmrs http://openmrs/openmrs
+    ProxyPassReverse /openmrs http://openmrs/openmrs
+
+    # Bahmni Apps
+    # Bahmni Apps requires to lookup the server date. Redirecting calls to "cgi-bin/systemdate".
+    ProxyPass /cgi-bin/systemdate http://bahmniapps/cgi-bin/systemdate
+    ProxyPass /bahmni http://bahmniapps
+    ProxyPassReverse /bahmni http://bahmniapps
+
+    # Bahmni Config
+    ProxyPass /bahmni_config http://bahmni-config
+    ProxyPassReverse /bahmni_config http://bahmni-config
+
+    # Implementer Interface
+    ProxyPass /implementer-interface http://implementer-interface/implementer-interface
+    ProxyPassReverse /implementer-interface http://implementer-interface/implementer-interface
+
+    # Appointments
+    ProxyPass /appointments http://appointments/appointments
+    ProxyPassReverse /appointments http://appointments/appointments
+
+    # Bahmni Home
+    ProxyPass /document_images http://bahmni-home/document_images
+    ProxyPassReverse /document_images http://bahmni-home/document_images
+    #
+    ProxyPass /clinical_forms http://bahmni-home/clinical_forms
+    ProxyPassReverse /clinical_forms http://bahmni-home/clinical_forms
+    #
+    ProxyPass /patient_images http://bahmni-home/patient_images
+    ProxyPassReverse /patient_images http://bahmni-home/patient_images
+    #
+    ProxyPass /reports http://bahmni-home/reports
+    ProxyPassReverse /reports http://bahmni-home/reports
+    #
+    ProxyPass /pacs_images http://bahmni-home/pacs_images
+    ProxyPassReverse /pacs_images http://bahmni-home/pacs_images
+    #
+    ProxyPass /uploaded_results http://bahmni-home/uploaded_results
+    ProxyPassReverse /uploaded_results http://bahmni-home/uploaded_results
+    #
+    ProxyPass /uploaded-files http://bahmni-home/uploaded-files
+    ProxyPassReverse /uploaded-files http://bahmni-home/uploaded-files
+
+    ProxyPass /uploaded-files http://bahmni-home/uploaded-files
+    ProxyPassReverse /uploaded-files http://bahmni-home/uploaded-files
+    # Others
+    Redirect permanent  /home  /bahmni/home/
+
+    # Bahmni Reports
+    ProxyPass /bahmni_config http://bahmni_config
+    ProxyPassReverse /bahmni_config http://bahmni_config
+    # Rewrite the OpenMRS Session Cookie as reporting_session Cookie for Bahmni Reports
+    RewriteCond %{REQUEST_URI} ^/openmrs*
+    RewriteCond %{HTTP_COOKIE} ^.*JSESSIONID=([^;]+)
+    RewriteRule ^.*$ - [CO=reporting_session:%1:%{SERVER_NAME}:86400:/:false:true]

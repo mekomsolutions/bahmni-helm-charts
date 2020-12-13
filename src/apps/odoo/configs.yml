@@ -67,7 +67,8 @@ data:
     EOSQL
     }
 
-    ODOO_USER=$(PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB -w -t -c "SELECT rolname FROM pg_roles WHERE pg_roles.rolname='$ODOO_DB_USER'")
-    if [ $ODOO_USER != "${ODOO_DB_USER}" ] ; then
-      create_user ${ODOO_DB_USER} ${ODOO_DB_PASSWORD}
-    fi
+    # ODOO_USER=$(PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB -w -t -c "SELECT rolname FROM pg_roles WHERE pg_roles.rolname='$ODOO_DB_USER'")
+    # if [ "$ODOO_USER" != "${ODOO_DB_USER}" ] ; then
+    #   create_user ${ODOO_DB_USER} ${ODOO_DB_PASSWORD}
+    # fi
+    PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB  -tAc "SELECT 1 FROM pg_roles WHERE rolname='$ODOO_DB_USER'" | grep -q 1 ||  create_user ${ODOO_DB_USER} ${ODOO_DB_PASSWORD} 
