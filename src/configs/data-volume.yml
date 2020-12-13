@@ -17,7 +17,7 @@ spec:
   storageClassName: data
   nfs:
     path: /mnt/disks/ssd1/data
-    server: master
+    server: 192.168.64.2
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
