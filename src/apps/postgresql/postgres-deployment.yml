@@ -36,7 +36,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: postgres-configs
-                  key: POSTGRES_PORT
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 configMapKeyRef:

@@ -54,21 +54,20 @@ metadata:
 data:
   create_odoo_db.sh: |
     #!/bin/bash
-
+    export PGPASSWORD=$POSTGRES_PASSWORD
     set -eu
 
     function create_user() {
       local user=$1
       local password=$2
       echo "  Creating '$user' user..."
-      psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" $POSTGRES_DB <<-EOSQL
+      psql -h $POSTGRES_HOST -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" $POSTGRES_DB <<-EOSQL
           CREATE USER $user WITH UNENCRYPTED PASSWORD '$password';
           ALTER USER $user CREATEDB;
     EOSQL
     }
 
-    ODOO_USER=$(PGPASSWORD= psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB -w -t -c "SELECT rolname FROM pg_roles WHERE pg_roles.rolname='$ODOO_DB_USER'")
-
-    if [ ODOO_USER != "${ODOO_DB_USER}" ] ; then
+    ODOO_USER=$(PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB -w -t -c "SELECT rolname FROM pg_roles WHERE pg_roles.rolname='$ODOO_DB_USER'")
+    if [ $ODOO_USER != "${ODOO_DB_USER}" ] ; then
       create_user ${ODOO_DB_USER} ${ODOO_DB_PASSWORD}
     fi
