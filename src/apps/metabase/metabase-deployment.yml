@@ -11,6 +11,52 @@ spec:
       labels:
         app: metabase
     spec:
+      volumes:
+        - name: metabase-db-config
+          configMap:
+            name: metabase-db
+      initContainers:
+        - name: init-db
+          image: postgres:alpine
+          volumeMounts:
+            - name: metabase-db-config
+              mountPath: "/mnt/"      
+          command: ['sh', '-c', "bash /mnt/create_openelis_db.sh"]
+          env:
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER 
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configs
+                  key: POSTGRES_PASSWORD
+            - name: MB_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: metabase-configs
+                  key: METABASE_DB_USER
+            - name: MB_DB_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: metabase-configs
+                  key: METABASE_DB_NAME
+            - name: MB_DB_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: metabase-configs
+                  key: METABASE_DB_PASSWORD
+            - name: MB_DB_HOST
+              value: postgres
       containers:
       - name: metabase
         image: mekomsolutions/metabase
@@ -19,7 +65,7 @@ spec:
         env:
           - name: MB_DB_TYPE
             value: postgres
-          - name: MB_DB_TYPE
+          - name: MB_DB_PORT
             value: "5432"
           - name: MB_DB_USER
             valueFrom:

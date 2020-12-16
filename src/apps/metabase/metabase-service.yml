@@ -9,5 +9,18 @@ spec:
   selector:
     app: metabase
   ports:
-  - port: 9003
-    targetPort: 8901
+  - port: 3000
+    targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metabase-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: metabase
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30010

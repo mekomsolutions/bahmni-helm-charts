@@ -1,25 +1,31 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: metabase-configs
+data:
+  METABASE_DB_NAME: metabase
+  METABASE_DB_PASSWORD: metabase
+  METABASE_DB_USER: metabase
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: metabase-db
 data:
-  create_odoo_db.sh: |
+  create_openelis_db.sh: |
     #!/bin/bash
-
-    set -eu
-
-    function create_user() {
-      local user=$1
-      local password=$2
-      echo "  Creating '$user' user..."
-      psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" $POSTGRES_DB <<-EOSQL
+    set -e
+    export PGPASSWORD=$POSTGRES_PASSWORD
+    function create_user_and_database() {
+      local database=$1
+      local user=$2
+      local password=$3
+      echo "  Creating '$user' user and '$database' database..."
+      psql -v ON_ERROR_STOP=1 -h $POSTGRES_HOST --username "$POSTGRES_USER" $POSTGRES_DB <<-EOSQL
           CREATE USER $user WITH UNENCRYPTED PASSWORD '$password';
-          ALTER USER $user CREATEDB;
+          CREATE DATABASE $database;
+          GRANT ALL PRIVILEGES ON DATABASE $user TO $database;
     EOSQL
-    }
+    } 
+    PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB  -tAc "SELECT 1 FROM pg_roles WHERE rolname='$MB_DB_USER'" | grep -q 1 ||  create_user_and_database ${MB_DB_DBNAME} ${MB_DB_USER} ${MB_DB_PASS}
 
-    ODOO_USER=$(PGPASSWORD=$ psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB -w -t -c "SELECT rolname FROM pg_roles WHERE pg_roles.rolname='$ODOO_DB_USER'")
-
-    if [ ODOO_USER != "${ODOO_DB_USER}" ] ; then
-      create_user ${ODOO_DB_USER} ${ODOO_DB_PASSWORD}
-    fi
