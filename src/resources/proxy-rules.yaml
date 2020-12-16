@@ -34,29 +34,29 @@ data:
     ProxyPassReverse /appointments http://appointments/appointments
 
     # Bahmni Home
-    ProxyPass /document_images http://bahmni-home/document_images
-    ProxyPassReverse /document_images http://bahmni-home/document_images
+    ProxyPass /document_images http://bahmni-filestore/document_images
+    ProxyPassReverse /document_images http://bahmni-filestore/document_images
     #
-    ProxyPass /clinical_forms http://bahmni-home/clinical_forms
-    ProxyPassReverse /clinical_forms http://bahmni-home/clinical_forms
+    ProxyPass /clinical_forms http://bahmni-filestore/clinical_forms
+    ProxyPassReverse /clinical_forms http://bahmni-filestore/clinical_forms
     #
-    ProxyPass /patient_images http://bahmni-home/patient_images
-    ProxyPassReverse /patient_images http://bahmni-home/patient_images
+    ProxyPass /patient_images http://bahmni-filestore/patient_images
+    ProxyPassReverse /patient_images http://bahmni-filestore/patient_images
     #
-    ProxyPass /reports http://bahmni-home/reports
-    ProxyPassReverse /reports http://bahmni-home/reports
+    ProxyPass /reports http://bahmni-filestore/reports
+    ProxyPassReverse /reports http://bahmni-filestore/reports
     #
-    ProxyPass /pacs_images http://bahmni-home/pacs_images
-    ProxyPassReverse /pacs_images http://bahmni-home/pacs_images
+    ProxyPass /pacs_images http://bahmni-filestore/pacs_images
+    ProxyPassReverse /pacs_images http://bahmni-filestore/pacs_images
     #
-    ProxyPass /uploaded_results http://bahmni-home/uploaded_results
-    ProxyPassReverse /uploaded_results http://bahmni-home/uploaded_results
+    ProxyPass /uploaded_results http://bahmni-filestore/uploaded_results
+    ProxyPassReverse /uploaded_results http://bahmni-filestore/uploaded_results
     #
-    ProxyPass /uploaded-files http://bahmni-home/uploaded-files
-    ProxyPassReverse /uploaded-files http://bahmni-home/uploaded-files
+    ProxyPass /uploaded-files http://bahmni-filestore/uploaded-files
+    ProxyPassReverse /uploaded-files http://bahmni-filestore/uploaded-files
 
-    ProxyPass /uploaded-files http://bahmni-home/uploaded-files
-    ProxyPassReverse /uploaded-files http://bahmni-home/uploaded-files
+    ProxyPass /uploaded-files http://bahmni-filestore/uploaded-files
+    ProxyPassReverse /uploaded-files http://bahmni-filestore/uploaded-files
     # Others
     Redirect permanent  /home  /bahmni/home/
 

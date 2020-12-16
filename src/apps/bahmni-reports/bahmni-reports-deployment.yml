@@ -16,7 +16,7 @@ spec:
           persistentVolumeClaim:
             claimName: distro-pvc
       containers:
-      - name: bahmni-config
+      - name: bahmni-reports
         image: mekomsolutions/bahmni-reports
         volumeMounts:
             - name: distro
