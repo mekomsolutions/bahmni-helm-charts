@@ -64,11 +64,11 @@ data:
       local user=$2
       local password=$3
       echo "  Creating '$user' user and '$database' database..."
-      psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" $POSTGRES_DB <<-EOSQL
+      PGPASSWORD=$POSTGRES_PASSWORD psql -v ON_ERROR_STOP=1  -h $POSTGRES_HOST --username "$POSTGRES_USER" $POSTGRES_DB <<-EOSQL
           CREATE USER $user WITH UNENCRYPTED PASSWORD '$password';
           CREATE DATABASE $database;
           GRANT ALL PRIVILEGES ON DATABASE $user TO $database;
     EOSQL
     }
 
-    create_user_and_database ${ANALYTICS_DB_NAME} ${ANALYTICS_DB_USER} ${ANALYTICS_DB_PASSWORD}
+    PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB  -tAc "SELECT 1 FROM pg_roles WHERE rolname='$ANALYTICS_DB_USER'" | grep -q 1 || create_user_and_database ${ANALYTICS_DB_NAME} ${ANALYTICS_DB_USER} ${ANALYTICS_DB_PASSWORD}
