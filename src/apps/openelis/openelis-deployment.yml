@@ -20,14 +20,11 @@ spec:
             name: postgres-db-scripts
       initContainers:
         - name: init-db
-          image: postgres:alpine
+          image: enyachoke/openelis-init
           volumeMounts:
             - name: openelis-db
               mountPath: "/mnt/"
-            - name: openelis-props
-              mountPath: "/sqls/"
-              
-          command: ['sh', '-c', "bash /mnt/create_openelis_db.sh"]
+          command: ['sh', '-c', "sh /mnt/create_openelis_db.sh"]
           env:
             - name: POSTGRES_HOST
               value: postgres
