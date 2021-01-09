@@ -22,17 +22,17 @@ metadata:
 data:
   atomfeed.properties: |
     #OpenMRS data specific properties
-    openmrs.auth.uri=http://openmrs/openmrs/ws/rest/v1/session
-    openmrs.patient.feed.uri=http://openmrs/openmrs/ws/atomfeed/patient/recent
-    openmrs.encounter.feed.uri=http://openmrs/openmrs/ws/atomfeed/encounter/recent
-    openmrs.lab.feed.uri=http://openmrs/openmrs/ws/atomfeed/lab/recent
+    openmrs.auth.uri=http://{{ .Release.Name }}-openmrs/openmrs/ws/rest/v1/session
+    openmrs.patient.feed.uri=http://{{ .Release.Name }}-openmrs/openmrs/ws/atomfeed/patient/recent
+    openmrs.encounter.feed.uri=http://{{ .Release.Name }}-openmrs/openmrs/ws/atomfeed/encounter/recent
+    openmrs.lab.feed.uri=http://{{ .Release.Name }}-openmrs/openmrs/ws/atomfeed/lab/recent
 
     openmrs.user=superman
     openmrs.password=Admin123
 
     #Reference data specific properties
 
-    reference.data.feed.uri=http://openmrs/reference-data/ws/feed/recent
+    reference.data.feed.uri=http://{{ .Release.Name }}-openmrs/reference-data/ws/feed/recent
     openmrs.connectionTimeoutInMilliseconds=10000
     openmrs.replyTimeoutInMilliseconds=20000
     productType.labTest=Test
@@ -40,11 +40,11 @@ data:
 
     #Reference data specific properties
 
-    reference.data.feed.uri=http://openmrs/reference-data/ws/feed/recent
+    reference.data.feed.uri=http://{{ .Release.Name }}-openmrs/reference-data/ws/feed/recent
     reference.data.connectionTimeoutInMilliseconds=10000
     reference.data.replyTimeoutInMilliseconds=20000
   hibernate.properties: |
-    hibernate.connection.url=jdbc:postgresql://postgres:5432/clinlims
+    hibernate.connection.url=jdbc:postgresql://{{ .Release.Name }}-postgres:5432/clinlims
     hibernate.connection.username=clinlims
     hibernate.connection.password=clinlims
     hibernate.default_schema=clinlims
