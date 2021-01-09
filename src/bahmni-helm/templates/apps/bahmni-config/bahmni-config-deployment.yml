@@ -1,0 +1,28 @@
+{{ if .Values.apps }}{{ if .Values.apps.bahmni_config }} {{ if .Values.apps.bahmni_config.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-bahmni-config
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-bahmni-config
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-bahmni-config
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-distro
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-distro-pvc
+      containers:
+      - name: {{ .Release.Name }}-bahmni-config
+        image: nginx:alpine
+        volumeMounts:
+            - name: {{ .Release.Name }}-distro
+              subPath: "bahmni_config/"
+              mountPath: "/usr/share/nginx/html"
+        ports:
+        - containerPort: 80
+{{ end }}{{ end }}{{ end }}

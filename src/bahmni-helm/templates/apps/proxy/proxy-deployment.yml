@@ -1,0 +1,33 @@
+{{ if .Values.apps }}{{ if .Values.apps.proxy }} {{ if .Values.apps.proxy.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-proxy
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-proxy
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-proxy
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-proxy
+        image: enyachoke/proxy:latest
+        command: ["httpd-foreground"]
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: {{ .Release.Name }}-proxy-rules-volume
+          mountPath: /usr/local/apache2/conf/rules
+        - name: {{ .Release.Name }}-proxy-config-volume
+          mountPath: /usr/local/apache2/conf/extra
+      volumes:
+      - name: {{ .Release.Name }}-proxy-rules-volume
+        configMap:
+          name: {{ .Release.Name }}-proxy-rules
+      - name: {{ .Release.Name }}-proxy-config-volume
+        configMap:
+          name: {{ .Release.Name }}-proxy-confs
+{{ end }}{{ end }}{{ end }}

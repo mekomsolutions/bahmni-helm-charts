@@ -1,0 +1,139 @@
+{{ if .Values.apps }}{{ if .Values.apps.openelis }} {{ if .Values.apps.openelis.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-openelis
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-openelis
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-openelis
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-openelis-props
+          configMap:
+            name: {{ .Release.Name }}-openelis-config
+        - name: {{ .Release.Name }}-openelis-db
+          configMap:
+            name: {{ .Release.Name }}-postgres-db-scripts
+      initContainers:
+        - name: init-db
+          image: enyachoke/openelis-init
+          volumeMounts:
+            - name: {{ .Release.Name }}-openelis-db
+              mountPath: "/mnt/"
+          command: ['sh', '-c', "sh /mnt/create_openelis_db.sh"]
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER 
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_PASSWORD
+# Odoo Vars
+            - name: OPENELIS_DB_NAME 
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_NAME
+            - name: OPENELIS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_USER
+            - name: OPENELIS_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_PASSWORD
+            - name: OPENELIS_DB_HOST
+              valueFrom:
+                  configMapKeyRef:
+                    name: {{ .Release.Name }}-openelis-db-config
+                    key: OPENELIS_DB_HOST
+      containers:
+      - name: openelis
+        image: enyachoke/openelis
+        volumeMounts:
+            - name: {{ .Release.Name }}-openelis-props
+              mountPath: "/etc/properties/"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: OPENELIS_DB_HOST
+            valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_HOST
+          - name: OPENMRS_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_HOST
+          - name: OPENMRS_USER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_USER
+          - name: OPENMRS_DB_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_DB_HOST
+          - name: OPENMRS_DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_DB_PASSWORD
+          - name: OPENMRS_DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_DB_USER
+          - name: OPENMRS_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_PASSWORD
+          - name: OPENELIS_DB_USER
+            valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_USER
+          - name: OPENELIS_DB_PASSWORD
+            valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_PASSWORD
+          - name: OPENELIS_DB_NAME
+            valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_NAME
+          - name: ATOMFEED_PROPERTIES_FILE_PATH
+            value: /etc/properties/atomfeed.properties
+          - name: HIBERNATE_PROPERTIES_FILE_PATH
+            value: /etc/properties/hibernate.properties
+{{ end }}{{ end }}{{ end }}
+
+
+
+
+

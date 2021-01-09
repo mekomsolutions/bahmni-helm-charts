@@ -1,0 +1,97 @@
+{{ if .Values.apps }}{{ if .Values.apps.metabase }} {{ if .Values.apps.metabase.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-metabase
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-metabase
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-metabase
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-metabase-db-config
+          configMap:
+            name: {{ .Release.Name }}-metabase-db
+      initContainers:
+        - name: {{ .Release.Name }}-init-db
+          image: postgres:alpine
+          volumeMounts:
+            - name: {{ .Release.Name }}-metabase-db-config
+              mountPath: "/mnt/"      
+          command: ['sh', '-c', "bash /mnt/create_openelis_db.sh"]
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER 
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_PASSWORD
+            - name: MB_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-metabase-configs
+                  key: METABASE_DB_USER
+            - name: MB_DB_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-metabase-configs
+                  key: METABASE_DB_NAME
+            - name: MB_DB_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-metabase-configs
+                  key: METABASE_DB_PASSWORD
+            - name: MB_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+      containers:
+      - name: {{ .Release.Name }}-metabase
+        image: mekomsolutions/metabase
+        ports:
+        - containerPort: 3000
+        env:
+          - name: MB_DB_TYPE
+            value: postgres
+          - name: MB_DB_PORT
+            value: "5432"
+          - name: MB_DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-metabase-configs
+                key: METABASE_DB_USER
+          - name: MB_DB_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-metabase-configs
+                key: METABASE_DB_NAME
+          - name: MB_DB_PASS
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-metabase-configs
+                key: METABASE_DB_PASSWORD
+          - name: MB_DB_HOST
+            valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+{{ end }}{{ end }}{{ end }}

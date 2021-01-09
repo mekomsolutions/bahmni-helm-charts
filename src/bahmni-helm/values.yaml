@@ -1,0 +1,163 @@
+isAppliance: false
+rwxStorageClass: longhorn-slow
+nfsLocalPath: /mnt/disks/ssd1/nfs
+postgresLocalPath: /mnt/disks/ssd1/data/postgresql
+mysqlLocalPath: /mnt/disks/ssd1/data/mysql
+databaseHostRole: database
+nfs:
+  enabled: false
+  image: enyachoke/nfs-ganesha-server-and-external-provisioner
+  hostRole: database
+  storageClassNamespace: mekomsolutions.com/nfs
+  nfsStorageClass: mekom-nfs
+apps:
+  appointments:
+    enabled: true
+  bahmni_config:
+    enabled: true
+  bahmni_filestore:
+    enabled: true
+  bahmni_mart:
+    enabled: true
+    ANALYTICS_DB_HOST: postgres
+    ANALYTICS_DB_NAME: analytics
+    ANALYTICS_DB_PASSWORD: password
+  bahmni_reports:
+    enabled: true
+  bahmniapps:
+    enabled: true
+  implementer_interface:
+    enabled: true
+  metabase:
+    enabled: true
+    METABASE_DB_NAME: metabase
+    METABASE_DB_PASSWORD: metabase
+    METABASE_DB_USER: metabase
+  mysql:
+    enabled: true
+    MYSQL_ROOT_USER: root
+    MYSQL_ROOT_PASSWORD: password
+  odoo:
+    enabled: true
+    ODOO_DB_USER: odoo
+    ODOO_DB_PASSWORD: password
+    ODOO_DB_NAME: odoo
+    ODOO_HOST: odoo 
+    ODOO_USER: admin
+    ODOO_PASSWORD: admin
+    ODOO_MASTER_PASSWORD: password
+    ODOO_PUBLIC_PORT: "8069"
+    ODOO_EXTRA_ADDONS: odoo_addons
+    ODOO_CONFIG_PATH: odoo_config
+  odoo_connect:
+    enabled: true
+  openelis:
+    enabled: true
+    OPENELIS_DB_USER: clinlims
+    OPENELIS_DB_PASSWORD: clinlims
+    OPENELIS_DB_NAME: clinlims
+    OPENELIS_DB_HOST: postgres
+    OPENELIS_ATOMFEED_USER: atomfeed
+    OPENELIS_ATOMFEED_PASSWORD: AdminadMIN*
+  openmrs:
+    enabled: true
+    OPENMRS_DB_NAME: openmrs
+    OPENMRS_USER: superman
+    OPENMRS_PASSWORD: Admin123
+    OPENMRS_HOST: openmrs
+    OPENMRS_DB_USER: openmrs
+    OPENMRS_DB_HOST: mysql
+    OPENMRS_DB_PASSWORD: password
+    OPENMRS_OWAS_PATH: openmrs_core
+    OPENMRS_MODULES_PATH: openmrs_modules
+    OPENMRS_CONFIG_PATH: openmrs_config
+    OPENMRS_CONFIG_CHECKSUMS_PATH: ""
+  postgresql:
+    enabled: true
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: "5432"
+    POSTGRES_PASSWORD: password
+    POSTGRES_DB: postgres
+    POSTGRES_USER: postgres
+  proxy:
+    enabled: true
+    
+# Default values for bahmni-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -1,0 +1,15 @@
+{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }} 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-odoo
+  labels:
+    app: {{ .Release.Name }}-odoo
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ .Release.Name }}-odoo
+  ports:
+  - port: 8069
+    targetPort: 8069
+{{ end }}{{ end }}{{ end }}

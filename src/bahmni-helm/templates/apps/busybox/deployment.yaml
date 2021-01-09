@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-update-container
+spec:
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-update-container
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}-update-container
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-busybox
+        image: mdlh/alpine-rsync
+        command: [ "sh", "-c", " tail -f /dev/null" ]
+        volumeMounts:
+        - name: {{ .Release.Name }}-distro
+          mountPath: /distro
+      volumes:
+      - name: {{ .Release.Name }}-distro
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-distro-pvc

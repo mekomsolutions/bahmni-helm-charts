@@ -1,0 +1,72 @@
+{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }} 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-openmrs-configs
+  labels:
+    app: {{ .Release.Name }}-openmrs
+data:
+  OPENMRS_DB_NAME: openmrs
+  OPENMRS_USER: superman
+  OPENMRS_PASSWORD: Admin123
+  OPENMRS_HOST: {{ .Release.Name }}-openmrs
+  OPENMRS_DB_USER: openmrs
+  OPENMRS_DB_HOST: {{ .Release.Name }}-mysql
+  OPENMRS_DB_PASSWORD: password
+  OPENMRS_OWAS_PATH: openmrs_core
+  OPENMRS_MODULES_PATH: openmrs_modules
+  OPENMRS_CONFIG_PATH: openmrs_config
+  OPENMRS_CONFIG_CHECKSUMS_PATH: ""
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-openmrs-props
+  labels:
+    app: {{ .Release.Name }}-openmrs
+data:
+  erp.properties: |
+    erp.host=${ODOO_HOST}
+    erp.port=8069
+    erp.user=${ODOO_USER}
+    erp.password=${ODOO_PASSWORD}
+    erp.database=${ODOO_DB}
+
+  bahmnicore.properties: |
+    bahmnicore.images.directory=/home/bahmni/patient_images
+    bahmnicore.images.directory.defaultImage=/home/bahmni/patient_images/blank-user.png
+    bahmnicore.urls.patientimages=/patient_images
+    bahmnicore.documents.baseDirectory=/home/bahmni/document_images
+
+    feed.maxFailedEvents=10000
+    feed.connectionTimeoutInMilliseconds=10000
+    feed.replyTimeoutInMilliseconds=20000
+
+    openelis.uri=http://{{ .Release.Name }}-openelis:8080/
+    openelis.user=atomfeed
+    openelis.password=AdminadMIN*
+    patient.feed.uri=http://{{ .Release.Name }}-openelis:8080/openelis/ws/feed/patient/recent
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-openmrs-db-script
+data:
+  create_openmrs_db.sh: |
+    #!/bin/bash
+    set -eu
+
+    echo "Checking OpenMRS database"
+    # RESULT=$(mysql -h $OPENMRS_DB_HOST --user=$MYSQL_ROOT_USER --password=$MYSQL_ROOT_PASSWORD -qfsBe "SHOW DATABASES;" | grep -F -- "$PWD")
+    RESULT=`mysql -h $OPENMRS_DB_HOST --user=$MYSQL_ROOT_USER --password=$MYSQL_ROOT_PASSWORD --skip-column-names -e "SHOW DATABASES LIKE '${OPENMRS_DB_NAME}'"  | wc -l `
+    if [ "$RESULT" -eq 0 ]; then
+      echo "Creating '$OPENMRS_DB_USER' database..."
+      mysql -h ${OPENMRS_DB_HOST} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE ${OPENMRS_DB_NAME} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+      mysql -h ${OPENMRS_DB_HOST} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD} -e "CREATE USER '${OPENMRS_DB_USER}'@'%' IDENTIFIED BY '${OPENMRS_DB_PASSWORD}';"
+      mysql -h ${OPENMRS_DB_HOST} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON ${OPENMRS_DB_NAME}.* TO '${OPENMRS_DB_USER}'@'%';"
+      mysql -h ${OPENMRS_DB_HOST} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD} -e "FLUSH PRIVILEGES;"
+      echo "User '${OPENMRS_DB_USER}' created successfully."
+    else
+      echo "Database already exists."
+    fi
+{{ end }}{{ end }}{{ end }}

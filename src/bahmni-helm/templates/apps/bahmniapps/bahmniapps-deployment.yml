@@ -1,0 +1,28 @@
+{{ if .Values.apps }}{{ if .Values.apps.bahmniapps }} {{ if .Values.apps.bahmniapps.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-bahmniapps
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-bahmniapps
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-bahmniapps
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-distro
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-distro-pvc
+      containers:
+      - name: bahmniapps
+        image: mekomsolutions/bahmniapps
+        volumeMounts:
+            - name: {{ .Release.Name }}-distro
+              subPath: "bahmni_emr/bahmniapps"
+              mountPath: "/var/www/bahmni"
+        ports:
+        - containerPort: 8900
+{{ end }}{{ end }}{{ end }}

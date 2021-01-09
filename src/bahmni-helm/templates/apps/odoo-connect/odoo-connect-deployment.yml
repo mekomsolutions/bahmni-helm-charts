@@ -1,0 +1,84 @@
+{{ if .Values.apps }}{{ if .Values.apps.odoo_connect }} {{ if .Values.apps.odoo_connect.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-odoo-connect
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-odoo-connect
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-odoo-connect
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-erp-config-volume
+          configMap:
+            name:  {{ .Release.Name }}-erp-config
+      containers:
+      - name: {{ .Release.Name }}-odoo-connect
+        image: mekomsolutions/odoo-connect
+        volumeMounts:
+            - name: {{ .Release.Name }}-erp-config-volume
+              mountPath: "/usr/local/tomcat/erp-atomfeed.properties"
+        env:
+          - name: ODOO_DB_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-postgres-configs
+                key: POSTGRES_HOST
+          - name: ODOO_DB
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_DB_NAME
+          - name: ODOO_DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_DB_USER
+          - name: ODOO_DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_DB_PASSWORD
+          - name: ODOO_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_HOST
+          - name: ODOO_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_USER
+          - name: ODOO_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_PASSWORD
+          - name: OPENMRS_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_HOST
+          - name: OPENMRS_USER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_USER
+          - name: OPENMRS_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_PASSWORD
+          - name: OPENELIS_HOST
+            value: openelis
+          - name: OPENELIS_USER
+            value: openelis
+          - name: OPENELIS_PASSWORD
+            value: password
+          - name: APP_PROPERTIES_FILE
+            value: "/usr/local/tomcat/erp-atomfeed.properties"
+{{ end }}{{ end }}{{ end }}

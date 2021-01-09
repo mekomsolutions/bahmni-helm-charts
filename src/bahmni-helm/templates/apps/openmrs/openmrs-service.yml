@@ -1,0 +1,39 @@
+{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }} 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-openmrs
+  labels:
+    app: {{ .Release.Name }}-openmrs
+spec:
+  selector:
+    app: {{ .Release.Name }}-openmrs
+  ports:
+  - name: '80'
+    protocol: TCP
+    port: 80
+    targetPort: 8080 
+  - name: '8080'
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-openmrs
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /openmrs
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /openmrs
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-openmrs
+            port:
+              number: 80
+{{ end }}{{ end }}{{ end }}

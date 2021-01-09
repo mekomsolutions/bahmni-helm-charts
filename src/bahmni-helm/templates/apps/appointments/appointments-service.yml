@@ -1,0 +1,31 @@
+{{ if .Values.apps }}{{ if .Values.apps.appointments }} {{ if .Values.apps.appointments.enabled }} 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-appointments
+  labels:
+    app: {{ .Release.Name }}-appointments
+spec:
+  selector:
+    app: {{ .Release.Name }}-appointments
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8903
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-appointments
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /appointments
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-appointments
+            port:
+              number: 80
+{{ end }}{{ end }}{{ end }}

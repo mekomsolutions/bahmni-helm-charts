@@ -1,0 +1,113 @@
+{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-openmrs
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-openmrs
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-openmrs
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-openmrs-props
+          configMap:
+            name: {{ .Release.Name }}-openmrs-props
+        - name: {{ .Release.Name }}-openmrs-db
+          configMap:
+            name: {{ .Release.Name }}-openmrs-db-script
+        - name: {{ .Release.Name }}-distro
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-distro-pvc
+        - name: {{ .Release.Name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-data-pvc
+      initContainers:
+        - name: {{ .Release.Name }}-init-db
+          image: mariadb
+          volumeMounts:
+            - name: {{ .Release.Name }}-openmrs-db
+              mountPath: "/mnt/"
+          command: ['sh', '-c', "bash /mnt/create_openmrs_db.sh"]
+          env:
+            - name: OPENMRS_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_HOST
+            - name: MYSQL_ROOT_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mysql-configs
+                  key: MYSQL_ROOT_USER
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mysql-configs
+                  key: MYSQL_ROOT_PASSWORD
+            - name: OPENMRS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_NAME
+            - name: OPENMRS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_USER
+            - name: OPENMRS_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_PASSWORD
+      containers:
+      - name: openmrs
+        image: mekomsolutions/openmrs
+        volumeMounts:
+            - name: {{ .Release.Name }}-distro
+              subPath: "openmrs_modules/"
+              mountPath: "/usr/local/tomcat/.OpenMRS/modules"
+            - name: {{ .Release.Name }}-distro
+              mountPath: "/usr/local/tomcat/.OpenMRS/configuration"
+              subPath: "openmrs_config/"
+            - name: {{ .Release.Name }}-openmrs-props
+              mountPath: "/etc/properties"
+            - name: {{ .Release.Name }}-data
+              subPath: "openmrs/bahmni_filestore"
+              mountPath: "/usr/local/tomcat/.OpenMRS/bahmni_filestore"
+            - name: {{ .Release.Name }}-data
+              subPath: "openmrs/configuration_checksums"
+              mountPath: "/usr/local/tomcat/.OpenMRS/configuration_checksums/"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MODULE_WEB_ADMIN
+            value: "true"
+          - name: DB_AUTO_UPDATE
+            value: "true"
+          - name: DB_CREATE_TABLES
+            value: "true"
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_DB_HOST
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_DB_NAME
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-openmrs-configs
+                key: OPENMRS_DB_PASSWORD
+{{ end }}{{ end }}{{ end }}

@@ -1,0 +1,62 @@
+{{ if .Values.apps }}{{ if .Values.apps.postgresql }} {{ if .Values.apps.postgresql.enabled }} 
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-postgres
+  labels:
+    app: {{ .Release.Name }}-postgres
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-postgres-headless
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-postgres
+  {{- if ne .Values.isAppliance true }}
+  volumeClaimTemplates:
+  - metadata:
+      name: haiti-postgres-database
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-postgres
+    spec:
+    {{ if .Values.isAppliance }}
+      volumes:
+        - name: {{ .Release.Name }}-postgres-database
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-postgres-pvc
+    {{ end }}
+      containers:
+        - name: {{ .Release.Name }}-postgres
+          image: postgres:9.6-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: {{ .Release.Name }}-postgres-database
+              mountPath: "/var/lib/postgresql/data"
+              subPath: postgres
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_PASSWORD
+      nodeSelector:
+        role: database
+{{ end }}{{ end }}{{ end }}

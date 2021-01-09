@@ -1,0 +1,11 @@
+{{ if .Values.apps }}{{ if .Values.apps.mysql }} {{ if .Values.apps.mysql.enabled }} 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-mysql-configs
+  labels:
+    app: {{ .Release.Name }}-mysql
+data:
+  MYSQL_ROOT_USER: root
+  MYSQL_ROOT_PASSWORD: password
+{{ end }}{{ end }}{{ end }}
