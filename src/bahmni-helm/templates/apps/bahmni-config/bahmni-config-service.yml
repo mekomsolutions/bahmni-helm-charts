@@ -1,0 +1,31 @@
+{{ if .Values.apps }}{{ if .Values.apps.bahmni_config }} {{ if .Values.apps.bahmni_config.enabled }} 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-bahmni-config
+  labels:
+    app: {{ .Release.Name }}-bahmni-config
+spec:
+  selector:
+    app: {{ .Release.Name }}-bahmni-config
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-bahmni-config
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /bahmni_config
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-bahmni-config
+            port:
+              number: 80
+{{ end }}{{ end }}{{ end }}

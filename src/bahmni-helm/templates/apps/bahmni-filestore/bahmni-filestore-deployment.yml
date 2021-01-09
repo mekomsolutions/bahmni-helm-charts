@@ -1,0 +1,28 @@
+{{ if .Values.apps }}{{ if .Values.apps.bahmni_filestore }} {{ if .Values.apps.bahmni_filestore.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-bahmni-filestore
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-bahmni-filestore
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-bahmni-filestore
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-data-pvc
+      containers:
+      - name: bahmni-filestore
+        image: nginx:alpine
+        volumeMounts:
+            - name: {{ .Release.Name }}-data
+              subPath: "openmrs/bahmni_filestore"
+              mountPath: "/usr/share/nginx/html/"
+        ports:
+        - containerPort: 80
+{{ end }}{{ end }}{{ end }}

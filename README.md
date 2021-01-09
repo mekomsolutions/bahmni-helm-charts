@@ -39,45 +39,17 @@ Wait until the nfs-provisioner pod starts
 ```kubectl get pods```
 ```nfs-provisioner-0   1/1     Running   0          5m31s```
 
+### Generating Kubernetes manifests from the helm-chart
+#### Values
+|Value   |Description   | Default
+|---|---|---|
+|   |   |   |
+|   |   |   |
+|   |   |   |
 ### Deploy configs and resources
 ```kubectl apply -f ./resources```
+
 ```kubectl apply -f ./configs```
-```kubectl get pvc```
-
-Should return something like
-
-```
-data-pvc     Bound    pvc-b40d13f6-da60-4df9-96be-a01a09918642   5Gi        RWX            mekom-nfs      19s
-distro-pvc   Bound    pvc-4e4725bf-75dd-4761-912a-8601839c19ce   2Gi        RWX            mekom-nfs      19s
-```
-**Note the id of distro-pvc for the next step**
-### Download configs
-```multipass exec k3s -- bash```
-
-```cd /mnt/disks/ssd1/nfs/pvc-4e4725bf-75dd-4761-912a-8601839c19ce```
-
-Replace ```pvc-4e4725bf-75dd-4761-912a-8601839c19ce``` with id of distro-pvc
-
-### Retrieve the Bahmni distribution of your choice:
-
-The Docker images do not provide a default Bahmni distribution so you need to first fetch one.
-You have multiple options available:
-
-- Clone and build one of the Bahmni Distros ([Haiti](https://github.com/mekomsolutions/bahmni-distro-haiti), [C2C](https://github.com/mekomsolutions/bahmni-distro-c2c) , [HSC](https://github.com/CRUDEM/bahmni-distro-hsc), [Cambodia](https://github.com/mekomsolutions/openmrs-distro-cambodia)...)
-
-- or manually download the Zip distro from Nexus:
-https://nexus.mekomsolutions.net/#browse/search=name.raw%3Dbahmni-distro-*
-
-We will use bahmni-distro-haiti for this setup
-
-```sudo apt-get install unzip```
-
-```wget https://nexus.mekomsolutions.net/repository/maven-releases/net/mekomsolutions/bahmni-distro-haiti/1.0.0/bahmni-distro-haiti-1.0.0.zip```
-
-```unzip bahmni-distro-haiti-1.0.0.zip```
-
-```rm bahmni-distro-haiti-1.0.0.zip```
-
 ```kubectl apply -f ./apps/ -R```
 
 Wait until all pods are in running state
@@ -133,7 +105,7 @@ The setup has a pod for uploading [https://github.com/mekomsolutions/openmrs-mod
 
 Get the update pod name
 
-```export POD_NAME=$(kubectl get pods -l name=update-container -o=jsonpath='{.items..metadata.name}')```
+```export POD_NAME=$(kubectl get pods -l name=haiti-update-container -o=jsonpath='{.items..metadata.name}')```
 
 Get The config
 
@@ -143,15 +115,43 @@ Create the unzip destination
 
 ```mkdir distro```
 
-**Note this actually has to be called distro due to limitations of the ```kubectl cp``` command**
-
 ```unzip bahmni-distro-haiti-1.0.0.zip -d distro```
-
-Clean the configs directory
-
-```kubectl exec $POD_NAME -- sh -c 'rm -rf /distro/*' ```
 
 Copy the new configs
 
-```kubectl cp distro  $POD_NAME:/ ```
+```rsync -av --progress --stats -e './scripts/rsync-helper.sh' distro/   $POD_NAME:/distro ```
+
+You need to scale down and then scale up your openmrs deployment to force it to restart
+
+```kubectl get deployment```
+
+Should return something like
+
+```
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+haiti-odoo-connect            1/1     1            1           16h
+nginx                         1/1     1            1           13h
+haiti-implementer-interface   1/1     1            1           16h
+haiti-bahmni-config           1/1     1            1           16h
+haiti-bahmni-filestore        1/1     1            1           16h
+haiti-update-container        1/1     1            1           16h
+haiti-bahmni-reports          1/1     1            1           16h
+haiti-bahmniapps              1/1     1            1           16h
+haiti-metabase                1/1     1            1           16h
+haiti-openelis                1/1     1            1           16h
+haiti-odoo                    1/1     1            1           16h
+haiti-proxy                   1/1     1            1           16h
+haiti-bahmni-mart             1/1     1            1           16h
+haiti-openmrs                 1/1     1            1           16h
+```
+
+For this case run
+
+```kubectl scale deployment haiti-openmrs --replicas 0```
+
+followed by
+
+```kubectl scale deployment haiti-openmrs --replicas 1```
+
+To scale it back up. This will force the OpenMRS pod to be recreated restarting OpenMRS
 

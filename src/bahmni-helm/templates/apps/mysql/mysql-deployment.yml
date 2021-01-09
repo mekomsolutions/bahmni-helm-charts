@@ -1,0 +1,56 @@
+{{ if .Values.apps }}{{ if .Values.apps.mysql }} {{ if .Values.apps.mysql.enabled }} 
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-mysql
+  labels:
+    app: {{ .Release.Name }}-mysql
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-mysql-headless
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-mysql
+  {{- if ne .Values.isAppliance true }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-mysql-database
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mysql
+    spec:
+    {{ if .Values.isAppliance }}
+      volumes:
+        - name: {{ .Release.Name }}-mysql-database
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-mysql-pvc
+     {{ end }}
+      containers:
+        - name: {{ .Release.Name }}-mysql
+          image: mariadb:10.3
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: {{ .Release.Name }}-mysql-database
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mysql-configs
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_ROOT_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mysql-configs
+                  key: MYSQL_ROOT_USER
+      nodeSelector:
+        role: database
+{{ end }}{{ end }}{{ end }}

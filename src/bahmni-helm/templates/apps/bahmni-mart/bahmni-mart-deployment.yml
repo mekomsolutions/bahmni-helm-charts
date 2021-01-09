@@ -1,0 +1,125 @@
+{{ if .Values.apps }}{{ if .Values.apps.bahmni_mart }} {{ if .Values.apps.bahmni_mart.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-bahmni-mart
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-bahmni-mart
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-bahmni-mart
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-distro
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-distro-pvc
+        - name: {{ .Release.Name }}-mart-props-vol
+          configMap:
+            name: {{ .Release.Name }}-mart-props
+        - name: {{ .Release.Name }}-mart-db-init
+          configMap:
+            name: {{ .Release.Name }}-postgres-db-scripts
+      initContainers:
+        - name: {{ .Release.Name }}-init-db
+          image: postgres:alpine
+          volumeMounts:
+            - name: {{ .Release.Name }}-mart-db-init
+              mountPath: "/mnt/"
+          command: ['sh', '-c', "bash /mnt/create_analytics_db.sh"]
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER 
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_PASSWORD
+            - name: ANALYTICS_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: ANALYTICS_DB_HOST
+            - name: ANALYTICS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: ANALYTICS_DB_NAME
+            - name: ANALYTICS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: ANALYTICS_DB_USER
+            - name: ANALYTICS_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: ANALYTICS_DB_PASSWORD
+      containers:
+      - name: {{ .Release.Name }}-bahmni-mart
+        image: mekomsolutions/bahmni-mart
+        volumeMounts:
+            - name: {{ .Release.Name }}-distro
+              mountPath: "/var/www"
+              subPath: "bahmni_config/"
+            - name: {{ .Release.Name }}-mart-props-vol
+              mountPath: "/opt/bahmni-mart/conf"
+        env:
+            - name: OPENMRS_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_HOST
+            - name: OPENMRS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_NAME
+            - name: OPENMRS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_USER
+            - name: OPENMRS_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_PASSWORD
+            - name: ANALYTICS_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: ANALYTICS_DB_HOST
+            - name: ANALYTICS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: ANALYTICS_DB_NAME
+            - name: ANALYTICS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: ANALYTICS_DB_USER
+            - name: ANALYTICS_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: ANALYTICS_DB_PASSWORD
+            - name: CRON_TIME
+              value: "0/5 * * * *"
+{{ end }}{{ end }}{{ end }}

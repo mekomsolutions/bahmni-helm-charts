@@ -1,0 +1,26 @@
+{{ if .Values.apps }}{{ if .Values.apps.implementer_interface }} {{ if .Values.apps.implementer_interface.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-implementer-interface
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-implementer-interface
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-implementer-interface
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-distro
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-distro-pvc
+        - name: {{ .Release.Name }}-httpd-config
+          
+      containers:
+      - name: {{ .Release.Name }}-implementer-interface
+        image: mekomsolutions/implementer-interface
+        ports:
+        - containerPort: 8902
+{{ end }}{{ end }}{{ end }}

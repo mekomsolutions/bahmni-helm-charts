@@ -1,0 +1,30 @@
+{{ if .Values.apps }}{{ if .Values.apps.bahmni_filestore }} {{ if .Values.apps.bahmni_filestore.enabled }} 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-bahmni-filestore
+  labels:
+    app: {{ .Release.Name }}-bahmni-filestore
+spec:
+  selector:
+    app: {{ .Release.Name }}-bahmni-filestore
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ .Release.Name }}-bahmni-filestore
+  annotations:
+    traefik.k8s.io/root-app: /bahmni-filestore
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: {{ .Release.Name }}-bahmni-filestore
+          servicePort: 80
+        path: /bahmni-filestore
+{{ end }}{{ end }}{{ end }}

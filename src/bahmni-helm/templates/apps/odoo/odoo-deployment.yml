@@ -1,0 +1,123 @@
+{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-odoo
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-odoo
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-odoo
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-odoo-db
+          configMap:
+            name: {{ .Release.Name }}-odoo-db
+        - name: {{ .Release.Name }}-odoo-props
+          configMap:
+            name: {{ .Release.Name }}-odoo-conf
+        - name:  {{ .Release.Name }}-distro
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-distro-pvc
+        - name: {{ .Release.Name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-data-pvc
+      initContainers:
+        - name: {{ .Release.Name }}-init-db
+          image: postgres:alpine
+          volumeMounts:
+            - name: {{ .Release.Name }}-odoo-db
+              mountPath: "/mnt/"
+          command: ['sh', '-c', "bash /mnt/create_odoo_db.sh"]
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER 
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_PASSWORD
+# Odoo Vars
+            - name: ODOO_DB_NAME 
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-odoo-configs
+                  key: ODOO_DB_NAME
+            - name: ODOO_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-odoo-configs
+                  key: ODOO_DB_USER
+            - name: ODOO_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-odoo-configs
+                  key: ODOO_DB_PASSWORD
+      containers:
+      - name: {{ .Release.Name }}-odoo
+        image: mekomsolutions/odoo
+        volumeMounts:
+            - name: {{ .Release.Name }}-odoo-props
+              mountPath: "/etc/properties/"
+            - name: {{ .Release.Name }}-distro
+              subPath: "odoo_config/"
+              mountPath: "/opt/odoo-config"
+            - name: {{ .Release.Name }}-distro
+              subPath: "odoo_addons/"
+              mountPath: "/mnt/extra-addons"
+            - name: {{ .Release.Name }}-data
+              subPath: "odoo/filestore"
+              mountPath: "/var/lib/odoo/filestore"
+            - name: {{ .Release.Name }}-distro
+              subPath: "openmrs_config/"
+              mountPath: "/opt/openmrs-config"
+        ports:
+        - containerPort: 8069
+        env:
+          - name: HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-postgres-configs
+                key: POSTGRES_HOST
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-postgres-configs
+                key: POSTGRES_PORT
+          - name: USER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_DB_USER
+          - name: PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_DB_PASSWORD
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_DB_NAME
+          - name: ODOO_MASTER_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-odoo-configs
+                key: ODOO_MASTER_PASSWORD
+{{ end }}{{ end }}{{ end }}

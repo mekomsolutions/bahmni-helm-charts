@@ -1,0 +1,20 @@
+{{ if .Values.apps }}{{ if .Values.apps.appointments }} {{ if .Values.apps.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-appointments
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-appointments
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-appointments
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-bahmni-config
+        image: mekomsolutions/appointments
+        ports:
+        - containerPort: 8903
+{{ end }}{{ end }}{{ end }}

@@ -1,0 +1,15 @@
+{{ if .Values.apps }}{{ if .Values.apps.metabase }} {{ if .Values.apps.metabase.enabled }} 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-metabase
+  labels:
+    app: {{ .Release.Name }}-metabase
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ .Release.Name }}-metabase
+  ports:
+  - port: 3000
+    targetPort: 3000
+{{ end }}{{ end }}{{ end }}

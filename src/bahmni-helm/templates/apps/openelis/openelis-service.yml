@@ -1,0 +1,15 @@
+{{ if .Values.apps }}{{ if .Values.apps.openelis }} {{ if .Values.apps.openelis.enabled }} 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-openelis
+  labels:
+    app: {{ .Release.Name }}-openelis
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ .Release.Name }}-openelis
+  ports:
+  - port: 8080
+    targetPort: 8080
+{{ end }}{{ end }}{{ end }}
