@@ -1,0 +1,45 @@
+{{ if .Values.apps }}{{ if .Values.apps.postgresql }} {{ if .Values.apps.postgresql.enabled }} {{ if .Values.isAppliance }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Release.Name }}-postgres-storage
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-postgres-pv
+spec:
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: {{ .Release.Name }}-postgres-storage
+  local:
+    path: {{ .Values.postgresLocalPath }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: role
+          operator: In
+          values:
+          - database
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-postgres-pvc
+  labels:
+    app: {{ .Release.Name }}-postgres
+spec:
+  storageClassName: {{ .Release.Name }}-postgres-storage
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+{{ end }}{{ end }}{{ end }}{{ end }}
