@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: registry-data-pvc
+spec:
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: mekom-nfs
+  accessModes:
+    - ReadWriteMany
