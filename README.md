@@ -27,16 +27,23 @@ Label the node that will hold datbase volumes and store nfs data
 ```kubectl label node k3s role=database```
 
 Create nfs and data volumes
+
 ```multipass exec k3s -- sudo mkdir -p /mnt/disks/ssd1/nfs```
+
 ```multipass exec k3s -- sudo mkdir -p /mnt/disks/ssd1/data/postgresql```
+
 ```multipass exec k3s -- sudo mkdir -p /mnt/disks/ssd1/data/mysql```
 
 ```$ cd ../```
 
 ### Setup nfs storage class
+
 ```kubectl apply -f ./nfs```
+
 Wait until the nfs-provisioner pod starts
+
 ```kubectl get pods```
+
 ```nfs-provisioner-0   1/1     Running   0          5m31s```
 
 ### Generating Kubernetes manifests from the helm-chart
@@ -50,6 +57,7 @@ Wait until the nfs-provisioner pod starts
 ```kubectl apply -f ./resources```
 
 ```kubectl apply -f ./configs```
+
 ```kubectl apply -f ./apps/ -R```
 
 Wait until all pods are in running state

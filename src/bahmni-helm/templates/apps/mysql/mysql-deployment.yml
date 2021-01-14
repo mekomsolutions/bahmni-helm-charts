@@ -51,6 +51,10 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-mysql-configs
                   key: MYSQL_ROOT_USER
+    {{ if .Values.selectDbHost }}
+     {{- with .Values.apps.postgresql.nodeSelector }}
       nodeSelector:
-        role: database
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
 {{ end }}{{ end }}{{ end }}

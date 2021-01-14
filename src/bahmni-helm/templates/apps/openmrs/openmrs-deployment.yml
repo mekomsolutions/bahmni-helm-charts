@@ -27,7 +27,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       initContainers:
         - name: {{ .Release.Name }}-init-db
-          image: mariadb
+          image: mariadb:10.3
           volumeMounts:
             - name: {{ .Release.Name }}-openmrs-db
               mountPath: "/mnt/"

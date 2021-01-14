@@ -14,7 +14,7 @@ spec:
   {{- if ne .Values.isAppliance true }}
   volumeClaimTemplates:
   - metadata:
-      name: haiti-postgres-database
+      name: {{ .Release.Name }}-postgres-database
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
@@ -57,6 +57,10 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-postgres-configs
                   key: POSTGRES_PASSWORD
+      {{ if .Values.selectDbHost }}
+      {{- with .Values.apps.postgresql.nodeSelector }}
       nodeSelector:
-        role: database
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{ end }}
 {{ end }}{{ end }}{{ end }}

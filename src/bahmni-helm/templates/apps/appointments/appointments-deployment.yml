@@ -1,4 +1,4 @@
-{{ if .Values.apps }}{{ if .Values.apps.appointments }} {{ if .Values.apps.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.appointments }} {{ if .Values.apps.appointments.enabled }} 
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -1,15 +1,18 @@
-isAppliance: false
-rwxStorageClass: longhorn-slow
+isAppliance: true
+selectDbHost: true
+rwxStorageClass: mekom-nfs
 nfsLocalPath: /mnt/disks/ssd1/nfs
 postgresLocalPath: /mnt/disks/ssd1/data/postgresql
 mysqlLocalPath: /mnt/disks/ssd1/data/mysql
 databaseHostRole: database
 nfs:
-  enabled: false
+  enabled: true
   image: enyachoke/nfs-ganesha-server-and-external-provisioner
   hostRole: database
-  storageClassNamespace: mekomsolutions.com/nfs
+  storageClassNamespace: mekomsolutions.net/nfs
   nfsStorageClass: mekom-nfs
+  nodeSelector:
+        role: database
 apps:
   appointments:
     enabled: true
@@ -37,6 +40,21 @@ apps:
     enabled: true
     MYSQL_ROOT_USER: root
     MYSQL_ROOT_PASSWORD: password
+    nodeSelector:
+        role: database
+    storage:
+      storageClass: mekom-nfs
+      accessMode: ReadWriteOnce
+      size: 2Gi
+      annotations: {}
+      nodeAffinity:
+        required:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: role
+              operator: In
+              values:
+              - database
   odoo:
     enabled: true
     ODOO_DB_USER: odoo
@@ -79,51 +97,23 @@ apps:
     POSTGRES_PASSWORD: password
     POSTGRES_DB: postgres
     POSTGRES_USER: postgres
+    nodeSelector:
+        role: database
+    storage:
+      storageClass: mekom-nfs
+      accessMode: ReadWriteOnce
+      size: 2Gi
+      annotations: {}
+      nodeAffinity:
+        required:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: role
+              operator: In
+              values:
+              - database
   proxy:
     enabled: true
-    
-# Default values for bahmni-helm.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-replicaCount: 1
-
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-service:
-  type: ClusterIP
-  port: 80
-
 ingress:
   enabled: false
   annotations: {}
