@@ -20,8 +20,9 @@ Update k3s
 ```nano /etc/rancher/k3s/registries.yaml```
 
 ```
-"192.168.0.99":
+mirrors:
+  "192.168.0.99":
     endpoint:
-      - "http://192.168.0.99"
+      - http://192.168.0.99
 ```
 
