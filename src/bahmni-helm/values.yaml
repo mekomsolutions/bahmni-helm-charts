@@ -16,27 +16,38 @@ nfs:
 apps:
   appointments:
     enabled: true
+    image: mekomsolutions/appointments
   bahmni_config:
+    image: nginx:alpine
     enabled: true
   bahmni_filestore:
+    image: nginx:alpine
     enabled: true
   bahmni_mart:
+    initImage: postgres:alpine
+    image: mekomsolutions/bahmni-mart
     enabled: true
     ANALYTICS_DB_HOST: postgres
     ANALYTICS_DB_NAME: analytics
     ANALYTICS_DB_PASSWORD: password
   bahmni_reports:
+    image: mekomsolutions/bahmni-reports
     enabled: true
   bahmniapps:
+    image: mekomsolutions/bahmniapps
     enabled: true
   implementer_interface:
+    image: mekomsolutions/implementer-interface
     enabled: true
   metabase:
+    initImage: postgres:alpine
+    image: mekomsolutions/metabase
     enabled: true
     METABASE_DB_NAME: metabase
     METABASE_DB_PASSWORD: metabase
     METABASE_DB_USER: metabase
   mysql:
+    image: mariadb:10.3
     enabled: true
     MYSQL_ROOT_USER: root
     MYSQL_ROOT_PASSWORD: password
@@ -56,6 +67,8 @@ apps:
               values:
               - database
   odoo:
+    initImage: postgres:alpine
+    image: mekomsolutions/odoo
     enabled: true
     ODOO_DB_USER: odoo
     ODOO_DB_PASSWORD: password
@@ -68,8 +81,11 @@ apps:
     ODOO_EXTRA_ADDONS: odoo_addons
     ODOO_CONFIG_PATH: odoo_config
   odoo_connect:
+    image: mekomsolutions/odoo-connect
     enabled: true
   openelis:
+    image: enyachoke/openelis
+    initImage: enyachoke/openelis-init
     enabled: true
     OPENELIS_DB_USER: clinlims
     OPENELIS_DB_PASSWORD: clinlims
@@ -78,6 +94,8 @@ apps:
     OPENELIS_ATOMFEED_USER: atomfeed
     OPENELIS_ATOMFEED_PASSWORD: AdminadMIN*
   openmrs:
+    initImage: mariadb:10.3
+    image: mekomsolutions/openmrs
     enabled: true
     OPENMRS_DB_NAME: openmrs
     OPENMRS_USER: superman
@@ -91,6 +109,7 @@ apps:
     OPENMRS_CONFIG_PATH: openmrs_config
     OPENMRS_CONFIG_CHECKSUMS_PATH: ""
   postgresql:
+    image: postgres:9.6-alpine
     enabled: true
     POSTGRES_HOST: postgres
     POSTGRES_PORT: "5432"
@@ -113,6 +132,7 @@ apps:
               values:
               - database
   proxy:
+    image: enyachoke/proxy:latest
     enabled: true
 ingress:
   enabled: false
