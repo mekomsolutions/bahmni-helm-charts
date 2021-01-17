@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-proxy
-        image: enyachoke/proxy:latest
+        image: {{ .Values.apps.proxy.image }} 
         command: ["httpd-foreground"]
         ports:
         - containerPort: 80

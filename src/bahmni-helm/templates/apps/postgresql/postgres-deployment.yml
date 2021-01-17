@@ -7,7 +7,7 @@ metadata:
     app: {{ .Release.Name }}-postgres
 spec:
   replicas: 1
-  serviceName: {{ .Release.Name }}-postgres-headless
+  serviceName: {{ .Release.Name }}-postgres
   selector:
     matchLabels:
       app: {{ .Release.Name }}-postgres
@@ -34,9 +34,27 @@ spec:
     {{ end }}
       containers:
         - name: {{ .Release.Name }}-postgres
-          image: postgres:9.6-alpine
+          image: {{ .Values.apps.postgresql.image }}
           ports:
             - containerPort: 5432
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 1
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - 'PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost --username "$POSTGRES_USER" -d $POSTGRES_DB -c "SELECT 1"'
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - 'PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost --username "$POSTGRES_USER" -d $POSTGRES_DB -c "SELECT 1"'
           volumeMounts:
             - name: {{ .Release.Name }}-postgres-database
               mountPath: "/var/lib/postgresql/data"

@@ -21,7 +21,7 @@ spec:
             name: {{ .Release.Name }}-postgres-db-scripts
       initContainers:
         - name: init-db
-          image: enyachoke/openelis-init
+          image: {{ .Values.apps.openelis.initImage }}
           volumeMounts:
             - name: {{ .Release.Name }}-openelis-db
               mountPath: "/mnt/"
@@ -70,12 +70,31 @@ spec:
                     key: OPENELIS_DB_HOST
       containers:
       - name: openelis
-        image: enyachoke/openelis
+        image: {{ .Values.apps.openelis.image }}
         volumeMounts:
             - name: {{ .Release.Name }}-openelis-props
               mountPath: "/etc/properties/"
         ports:
-        - containerPort: 8080
+        - name: http
+          containerPort: 8080
+        startupProbe:
+          httpGet:
+            path: /openelis
+            port: http
+          failureThreshold: 50
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /openelis
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /openelis
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
         env:
           - name: OPENELIS_DB_HOST
             valueFrom:

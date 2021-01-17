@@ -18,7 +18,7 @@ spec:
             claimName: {{ .Release.Name }}-distro-pvc
       containers:
       - name: {{ .Release.Name }}-bahmni-reports
-        image: mekomsolutions/bahmni-reports
+        image: {{ .Values.apps.bahmni_reports.image }}
         volumeMounts:
             - name: {{ .Release.Name }}-distro
               mountPath: "/var/www/bahmni_config"

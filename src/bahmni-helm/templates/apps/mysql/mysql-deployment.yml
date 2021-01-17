@@ -34,9 +34,27 @@ spec:
      {{ end }}
       containers:
         - name: {{ .Release.Name }}-mysql
-          image: mariadb:10.3
+          image: {{ .Values.apps.mysql.image }}
           ports:
             - containerPort: 3306
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 1
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h localhost -e "SELECT 1"'
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - 'mysqladmin -uroot -p${MYSQL_ROOT_PASSWORD} ping'
           volumeMounts:
             - mountPath: "/var/lib/mysql"
               name: {{ .Release.Name }}-mysql-database

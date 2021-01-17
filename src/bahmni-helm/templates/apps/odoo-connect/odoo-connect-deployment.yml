@@ -18,7 +18,7 @@ spec:
             name:  {{ .Release.Name }}-erp-config
       containers:
       - name: {{ .Release.Name }}-odoo-connect
-        image: mekomsolutions/odoo-connect
+        image: {{ .Values.apps.odoo_connect.image }}
         volumeMounts:
             - name: {{ .Release.Name }}-erp-config-volume
               mountPath: "/usr/local/tomcat/erp-atomfeed.properties"
