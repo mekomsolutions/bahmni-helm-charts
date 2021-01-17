@@ -209,9 +209,11 @@ Metabase via metabase http://192.168.64.7:3000
 
 Openelis via openelis http://192.168.64.7:8080
 
-### Uploading local configs
-The setup has a pod for uploading [https://github.com/mekomsolutions/openmrs-module-initializer 
-](openmrs-module-initializer) it is a busyboxy mounting the configs pvc at ```/distro``` to upload configs using the bahmni-distro-haiti example
+## Managing files using the update container
+The update container is a helper container that attaches the distro and data volumes which contain distro configurations and applications data respectively you will need rsync installed to use the helper script and avoid using ```kubectl cp```
+
+### Uploading distro configurations
+To upload configs using the bahmni-distro-haiti
 
 Get the update pod name
 
@@ -227,9 +229,12 @@ Create the unzip destination
 
 ```unzip bahmni-distro-haiti-1.0.0.zip -d distro```
 
-Copy the new configs
+Upload the new configs
 
-```rsync -av --progress --stats -e './scripts/rsync-helper.sh' distro/   $POD_NAME:/distro ```
+```scripts/krsync -av --progress --stats distro  $POD_NAME:/distro ```
+
+This will sync the local distro folder with the distro folder on the update container
+
 
 You need to scale down and then scale up your openmrs deployment to force it to restart
 
@@ -264,4 +269,12 @@ followed by
 ```kubectl scale deployment haiti-openmrs --replicas 1```
 
 To scale it back up. This will force the OpenMRS pod to be recreated restarting OpenMRS
+
+
+### Download files from the container's data folder
+
+```scripts/krsync -av --progress --stats  $POD_NAME:/data data```
+This could be used to download backups and other files.
+
+#### NOTE: Sometimes this command my fail if the pipe to the pod breaks when using ```kubectl cp``` This will fail silently and there is no way to know that the copy failed. With this helper it will fail with a non zero error code
 

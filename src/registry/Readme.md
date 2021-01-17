@@ -1,3 +1,9 @@
+### Installation
+The installation uses hostpath in the node with role database
+create the folder for the registry
+
+```/mnt/disks/ssd1/registry```
+
 ### Example ync images to local registry with skopeo
 
 ```mkdir images```
