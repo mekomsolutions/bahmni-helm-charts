@@ -14,6 +14,8 @@ nfs:
   nodeSelector:
         role: database
 apps:
+  updatebox:
+    image: mdlh/alpine-rsync
   appointments:
     enabled: true
     image: mekomsolutions/appointments

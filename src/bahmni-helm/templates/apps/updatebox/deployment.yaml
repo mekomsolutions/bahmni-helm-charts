@@ -13,13 +13,18 @@ spec:
         name: {{ .Release.Name }}-update-container
     spec:
       containers:
-      - name: {{ .Release.Name }}-busybox
-        image: mdlh/alpine-rsync
+      - name: {{ .Release.Name }}-updatebox
+        image: {{ .Values.apps.updatebox.image }} 
         command: [ "sh", "-c", " tail -f /dev/null" ]
         volumeMounts:
         - name: {{ .Release.Name }}-distro
           mountPath: /distro
+        - name: {{ .Release.Name }}-data
+          mountPath: /data
       volumes:
       - name: {{ .Release.Name }}-distro
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-distro-pvc
+      - name: {{ .Release.Name }}-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-data-pvc
