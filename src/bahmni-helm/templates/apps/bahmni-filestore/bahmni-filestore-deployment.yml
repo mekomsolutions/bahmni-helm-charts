@@ -18,7 +18,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       containers:
       - name: bahmni-filestore
-        image: nginx:alpine
+        image: {{ .Values.apps.bahmni_filestore.image }} 
         volumeMounts:
             - name: {{ .Release.Name }}-data
               subPath: "openmrs/bahmni_filestore"

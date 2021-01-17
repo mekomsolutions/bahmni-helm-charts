@@ -27,7 +27,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       initContainers:
         - name: {{ .Release.Name }}-init-db
-          image: mariadb:10.3
+          image: {{ .Values.apps.openmrs.initImage }}
           volumeMounts:
             - name: {{ .Release.Name }}-openmrs-db
               mountPath: "/mnt/"
@@ -65,7 +65,7 @@ spec:
                   key: OPENMRS_DB_PASSWORD
       containers:
       - name: openmrs
-        image: mekomsolutions/openmrs
+        image: {{ .Values.apps.openmrs.image }}
         volumeMounts:
             - name: {{ .Release.Name }}-distro
               subPath: "openmrs_modules/"
@@ -82,7 +82,26 @@ spec:
               subPath: "openmrs/configuration_checksums"
               mountPath: "/usr/local/tomcat/.OpenMRS/configuration_checksums/"
         ports:
-        - containerPort: 8080
+        - name: openmrs-port
+          containerPort: 8080
+        startupProbe:
+          httpGet:
+            path: /openmrs
+            port: openmrs-port
+          failureThreshold: 180
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /openmrs
+            port: openmrs-port
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /openmrs
+            port: openmrs-port
+          initialDelaySeconds: 5
+          periodSeconds: 10
         env:
           - name: MODULE_WEB_ADMIN
             value: "true"

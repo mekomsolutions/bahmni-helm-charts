@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-bahmni-config
-        image: mekomsolutions/appointments
+        image: {{ .Values.apps.appointments.image }}
         ports:
         - containerPort: 8903
 {{ end }}{{ end }}{{ end }}

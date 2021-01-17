@@ -18,7 +18,7 @@ spec:
             name: {{ .Release.Name }}-metabase-db
       initContainers:
         - name: {{ .Release.Name }}-init-db
-          image: postgres:alpine
+          image: {{ .Values.apps.metabase.initImage }}
           volumeMounts:
             - name: {{ .Release.Name }}-metabase-db-config
               mountPath: "/mnt/"      
@@ -66,9 +66,22 @@ spec:
                   key: POSTGRES_HOST
       containers:
       - name: {{ .Release.Name }}-metabase
-        image: mekomsolutions/metabase
+        image: {{ .Values.apps.metabase.image }}
         ports:
-        - containerPort: 3000
+        - name: metabase-port
+          containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: metabase-port
+          initialDelaySeconds: 20
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: metabase-port
+          initialDelaySeconds: 10
+          periodSeconds: 20
         env:
           - name: MB_DB_TYPE
             value: postgres

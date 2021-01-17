@@ -44,21 +44,123 @@ Wait until the nfs-provisioner pod starts
 
 ```kubectl get pods```
 
+
 ```nfs-provisioner-0   1/1     Running   0          5m31s```
 
 ### Generating Kubernetes manifests from the helm-chart
+
+```helm template haiti bahmni-helm --output-dir haiti-distro  ```
+
 #### Values
 |Value   |Description   | Default
 |---|---|---|
-|   |   |   |
-|   |   |   |
-|   |   |   |
+| isAppliance  |   |   |
+| selectDbHost  |   |   |
+| rwxStorageClass  |   |   |
+| postgresLocalPath  |   |   |
+| mysqlLocalPath  |   |   |
+| databaseHostRole  |   |   |
+| nfs.enabled  |   |   |
+| nfs.image  |   |   |
+| nfs.hostRole  |   |   |
+| nfs.storageClassNamespace  |   |   |
+| nfs.nfsStorageClass  |   |   |
+| nfs.nodeSelector  |   |   |
+| apps.appointments.enabled  |   |   |
+| apps.appointments.image  |   |   |
+| apps.bahmni_config.enabled  |   |   |
+| apps.bahmni_config.image  |   |   |
+| apps.bahmni_filestore.enabled  |   |   |
+| apps.bahmni_filestore.image  |   |   |
+| apps.bahmni_mart.enabled  |   |   |
+| apps.bahmni_mart.ANALYTICS_DB_HOST  |   |   |
+| apps.bahmni_mart.ANALYTICS_DB_NAME  |   |   |
+| apps.bahmni_mart.ANALYTICS_DB_PASSWORD  |   |   |
+| apps.bahmni_reports.enabled  |   |   |
+| apps.bahmni_reports.image  |   |   |
+| apps.bahmniapps.enabled  |   |   |
+| apps.bahmniapps.image  |   |   |
+| apps.implementer_interface.enabled  |   |   |
+| apps.implementer_interface.image  |   |   |
+| apps.metabase.enabled  |   |   |
+| apps.metabase.image  |   |   |
+| apps.metabase.METABASE_DB_NAME  |   |   |
+| apps.metabase.METABASE_DB_PASSWORD  |   |   |
+| apps.metabase.METABASE_DB_USER  |   |   |
+| apps.mysql.enabled  |   |   |
+| apps.mysql.image  |   |   |
+| apps.mysql.MYSQL_ROOT_USER  |   |   |
+| apps.mysql.MYSQL_ROOT_PASSWORD  |   |   |
+| apps.mysql.nodeSelector  |   |   |
+| apps.mysql.storage.storageClass  |   |   |
+| apps.mysql.storage.size  |   |   |
+| apps.mysql.storage.annotations  |   |   |
+| apps.mysql.storage.nodeAffinity  |   |   |
+| apps.postgresql.enabled  |   |   |
+| apps.postgresql.image  |   |   |
+| apps.postgresql.POSTGRES_HOST  |   |   |
+| apps.postgresql.POSTGRES_PORT  |   |   |
+| apps.postgresql.POSTGRES_PASSWORD  |   |   |
+| apps.postgresql.POSTGRES_DB  |   |   |
+| apps.postgresql.POSTGRES_USER  |   |   |
+| apps.postgresql.nodeSelector  |   |   |
+| apps.postgresql.storage.storageClass  |   |   |
+| apps.postgresql.storage.size  |   |   |
+| apps.postgresql.storage.annotations  |   |   |
+| apps.postgresql.storage.nodeAffinity  |   |   |
+| apps.odoo.enabled  |   |   |
+| apps.odoo.image  |   |   |
+| apps.odoo.ODOO_DB_USER  |   |   |
+| apps.odoo.ODOO_DB_PASSWORD  |   |   |
+| apps.odoo.ODOO_DB_NAME  |   |   |
+| apps.odoo.ODOO_HOST  |   |   |
+| apps.odoo.ODOO_USER  |   |   |
+| apps.odoo.ODOO_PASSWORD  |   |   |
+| apps.odoo.ODOO_MASTER_PASSWORD  |   |   |
+| apps.odoo.ODOO_EXTRA_ADDONS  |   |   |
+| apps.odoo.ODOO_CONFIG_PATH  |   |   |
+| apps.odoo_connect.enabled  |   |   |
+| apps.odoo_connect.image  |   |   |
+| apps.openelis.enabled  |   |   |
+| apps.openelis.image  |   |   |
+| apps.openelis.OPENELIS_DB_USER |   |   |
+| apps.openelis.OPENELIS_DB_PASSWORD |   |   |
+| apps.openelis.OPENELIS_DB_NAME  |   |   |
+| apps.openelis.OPENELIS_DB_HOST  |   |   |
+| apps.openelis.OPENELIS_ATOMFEED_USER  |   |   |
+| apps.openelis.OPENELIS_ATOMFEED_PASSWORD  |   |   |
+| apps.openelis.enabled  |   |   |
+| apps.openelis.image  |   |   |
+| apps.openelis.OPENMRS_DB_NAME  |   |   |
+| apps.openelis.OPENMRS_USER  |   |   |
+| apps.openelis.OPENMRS_PASSWORD  |   |   |
+| apps.openelis.OPENMRS_HOST  |   |   |
+| apps.openelis.OPENMRS_DB_USER  |   |   |
+| apps.openelis.OPENMRS_DB_HOST  |   |   |
+| apps.openelis.OPENMRS_DB_PASSWORD  |   |   |
+| apps.openelis.OPENMRS_OWAS_PATH  |   |   |
+| apps.openelis.OPENMRS_MODULES_PATH  |   |   |
+| apps.openelis.OPENMRS_CONFIG_PATH  |   |   |
+| apps.openelis.OPENMRS_CONFIG_CHECKSUMS_PATH  |   |   |
+| apps.proxy.enabled  |   |   |
+| apps.proxy.image  |   |   |
+
+
+
+
+
+
+
+
+
 ### Deploy configs and resources
-```kubectl apply -f ./resources```
+````kubectl apply -f ./haiti-distro/bahmni-helm/templates/resources```
 
-```kubectl apply -f ./configs```
+```kubectl apply -f ./haiti-distro/bahmni-helm/templates/configs```
 
-```kubectl apply -f ./apps/ -R```
+```kubectl apply -f ./haiti-distro/bahmni-helm/templates/common```
+
+```kubectl apply -f ./haiti-distro/bahmni-helm/templates/apps/ -R```
 
 Wait until all pods are in running state
 

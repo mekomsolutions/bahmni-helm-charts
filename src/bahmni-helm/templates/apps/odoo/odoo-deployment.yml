@@ -27,7 +27,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       initContainers:
         - name: {{ .Release.Name }}-init-db
-          image: postgres:alpine
+          image: {{ .Values.apps.odoo.initImage }}
           volumeMounts:
             - name: {{ .Release.Name }}-odoo-db
               mountPath: "/mnt/"
@@ -71,7 +71,7 @@ spec:
                   key: ODOO_DB_PASSWORD
       containers:
       - name: {{ .Release.Name }}-odoo
-        image: mekomsolutions/odoo
+        image: {{ .Values.apps.odoo.image }}
         volumeMounts:
             - name: {{ .Release.Name }}-odoo-props
               mountPath: "/etc/properties/"
@@ -88,7 +88,26 @@ spec:
               subPath: "openmrs_config/"
               mountPath: "/opt/openmrs-config"
         ports:
-        - containerPort: 8069
+        - name: http
+          containerPort: 8069
+        startupProbe:
+          httpGet:
+            path: /
+            port: http
+          failureThreshold: 50
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
         env:
           - name: HOST
             valueFrom:

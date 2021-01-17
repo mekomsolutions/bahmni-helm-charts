@@ -18,7 +18,7 @@ spec:
             claimName: {{ .Release.Name }}-distro-pvc
       containers:
       - name: {{ .Release.Name }}-bahmni-config
-        image: nginx:alpine
+        image: {{ .Values.apps.bahmni_config.image }} 
         volumeMounts:
             - name: {{ .Release.Name }}-distro
               subPath: "bahmni_config/"

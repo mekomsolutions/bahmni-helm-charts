@@ -20,7 +20,7 @@ spec:
           
       containers:
       - name: {{ .Release.Name }}-implementer-interface
-        image: mekomsolutions/implementer-interface
+        image: {{ .Values.apps.implementer_interface.image }}
         ports:
         - containerPort: 8902
 {{ end }}{{ end }}{{ end }}

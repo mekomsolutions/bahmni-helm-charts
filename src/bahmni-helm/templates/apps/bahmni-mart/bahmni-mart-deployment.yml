@@ -24,7 +24,7 @@ spec:
             name: {{ .Release.Name }}-postgres-db-scripts
       initContainers:
         - name: {{ .Release.Name }}-init-db
-          image: postgres:alpine
+          image: {{ .Values.apps.bahmni_mart.initImage }} 
           volumeMounts:
             - name: {{ .Release.Name }}-mart-db-init
               mountPath: "/mnt/"
@@ -72,7 +72,7 @@ spec:
                   key: ANALYTICS_DB_PASSWORD
       containers:
       - name: {{ .Release.Name }}-bahmni-mart
-        image: mekomsolutions/bahmni-mart
+        image: {{ .Values.apps.bahmni_mart.image }} 
         volumeMounts:
             - name: {{ .Release.Name }}-distro
               mountPath: "/var/www"

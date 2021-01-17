@@ -7,7 +7,7 @@ metadata:
     app: {{ .Release.Name }}-postgres
 spec:
   selector:
-    app: {{ .Release.Name }}-postgres-headless
+    app: {{ .Release.Name }}-postgres
   ports:
   - protocol: TCP
     port: 5432
