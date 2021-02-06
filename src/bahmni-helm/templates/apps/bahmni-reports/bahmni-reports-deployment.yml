@@ -19,6 +19,10 @@ spec:
       containers:
       - name: {{ .Release.Name }}-bahmni-reports
         image: {{ .Values.apps.bahmni_reports.image }}
+        resources:
+            requests:
+              memory: "{{  .Values.apps.bahmni_reports.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.bahmni_reports.resources.requests.cpu }}"
         volumeMounts:
             - name: {{ .Release.Name }}-distro
               mountPath: "/var/www/bahmni_config"

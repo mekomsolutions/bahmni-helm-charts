@@ -6,10 +6,10 @@ metadata:
   labels:
     app: {{ .Release.Name }}-bahmni-mart
 data:
-  ANALYTICS_DB_HOST: postgres
-  ANALYTICS_DB_NAME: analytics
-  ANALYTICS_DB_USER: analytics
-  ANALYTICS_DB_PASSWORD: password
+  ANALYTICS_DB_HOST: {{ .Release.Name }}-postgres
+  ANALYTICS_DB_NAME: {{.Values.apps.bahmni_mart.ANALYTICS_DB_NAME }} 
+  ANALYTICS_DB_USER: {{.Values.apps.bahmni_mart.ANALYTICS_DB_USER }}
+  ANALYTICS_DB_PASSWORD: {{.Values.apps.bahmni_mart.ANALYTICS_DB_PASSWORD }}
 ---
 apiVersion: v1
 kind: ConfigMap

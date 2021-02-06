@@ -15,6 +15,11 @@ spec:
       containers:
       - name: {{ .Release.Name }}-bahmni-config
         image: {{ .Values.apps.appointments.image }}
+        resources:
+            requests:
+              memory: "{{  .Values.apps.appointments.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.appointments.resources.requests.cpu }}"
+            
         ports:
         - containerPort: 8903
 {{ end }}{{ end }}{{ end }}

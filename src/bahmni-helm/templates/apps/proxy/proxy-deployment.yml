@@ -15,6 +15,10 @@ spec:
       containers:
       - name: {{ .Release.Name }}-proxy
         image: {{ .Values.apps.proxy.image }} 
+        resources:
+            requests:
+              memory: "{{  .Values.apps.proxy.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.proxy.resources.requests.cpu }}"
         command: ["httpd-foreground"]
         ports:
         - containerPort: 80

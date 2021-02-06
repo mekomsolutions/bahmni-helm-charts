@@ -72,6 +72,10 @@ spec:
       containers:
       - name: {{ .Release.Name }}-odoo
         image: {{ .Values.apps.odoo.image }}
+        resources:
+            requests:
+              memory: "{{  .Values.apps.odoo.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.odoo.resources.requests.cpu }}"
         volumeMounts:
             - name: {{ .Release.Name }}-odoo-props
               mountPath: "/etc/properties/"
@@ -95,7 +99,7 @@ spec:
             path: /
             port: http
           failureThreshold: 50
-          periodSeconds: 10
+          periodSeconds: 20
         livenessProbe:
           httpGet:
             path: /
