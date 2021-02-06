@@ -19,6 +19,10 @@ spec:
       containers:
       - name: bahmni-filestore
         image: {{ .Values.apps.bahmni_filestore.image }} 
+        resources:
+            requests:
+              memory: "{{  .Values.apps.bahmni_filestore.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.bahmni_filestore.resources.requests.cpu }}"
         volumeMounts:
             - name: {{ .Release.Name }}-data
               subPath: "openmrs/bahmni_filestore"

@@ -19,12 +19,24 @@ apps:
   appointments:
     enabled: true
     image: mekomsolutions/appointments
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   bahmni_config:
     image: nginx:alpine
     enabled: true
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   bahmni_filestore:
     image: nginx:alpine
     enabled: true
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   bahmni_mart:
     initImage: postgres:alpine
     image: mekomsolutions/bahmni-mart
@@ -32,15 +44,32 @@ apps:
     ANALYTICS_DB_HOST: postgres
     ANALYTICS_DB_NAME: analytics
     ANALYTICS_DB_PASSWORD: password
+    ANALYTICS_DB_USER: analytics
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   bahmni_reports:
     image: mekomsolutions/bahmni-reports
     enabled: true
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   bahmniapps:
     image: mekomsolutions/bahmniapps
     enabled: true
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   implementer_interface:
     image: mekomsolutions/implementer-interface
     enabled: true
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   metabase:
     initImage: postgres:alpine
     image: mekomsolutions/metabase
@@ -48,11 +77,19 @@ apps:
     METABASE_DB_NAME: metabase
     METABASE_DB_PASSWORD: metabase
     METABASE_DB_USER: metabase
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   mysql:
     image: mariadb:10.3
     enabled: true
     MYSQL_ROOT_USER: root
     MYSQL_ROOT_PASSWORD: password
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
     nodeSelector:
         role: database
     storage:
@@ -82,9 +119,19 @@ apps:
     ODOO_PUBLIC_PORT: "8069"
     ODOO_EXTRA_ADDONS: odoo_addons
     ODOO_CONFIG_PATH: odoo_config
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   odoo_connect:
     image: mekomsolutions/odoo-connect
     enabled: true
+    OPENELIS_USER: admin
+    OPENELIS_PASSWORD: adminADMIN!
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   openelis:
     image: enyachoke/openelis
     initImage: enyachoke/openelis-init
@@ -92,9 +139,12 @@ apps:
     OPENELIS_DB_USER: clinlims
     OPENELIS_DB_PASSWORD: clinlims
     OPENELIS_DB_NAME: clinlims
-    OPENELIS_DB_HOST: postgres
     OPENELIS_ATOMFEED_USER: atomfeed
     OPENELIS_ATOMFEED_PASSWORD: AdminadMIN*
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   openmrs:
     initImage: mariadb:10.3
     image: mekomsolutions/openmrs
@@ -110,6 +160,10 @@ apps:
     OPENMRS_MODULES_PATH: openmrs_modules
     OPENMRS_CONFIG_PATH: openmrs_config
     OPENMRS_CONFIG_CHECKSUMS_PATH: ""
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
   postgresql:
     image: postgres:9.6-alpine
     enabled: true
@@ -118,6 +172,10 @@ apps:
     POSTGRES_PASSWORD: password
     POSTGRES_DB: postgres
     POSTGRES_USER: postgres
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
     nodeSelector:
         role: database
     storage:
@@ -136,6 +194,10 @@ apps:
   proxy:
     image: enyachoke/proxy:latest
     enabled: true
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "512Mi"
 ingress:
   enabled: false
   annotations: {}

@@ -19,6 +19,10 @@ spec:
       containers:
       - name: {{ .Release.Name }}-bahmni-config
         image: {{ .Values.apps.bahmni_config.image }} 
+        resources:
+            requests:
+              memory: "{{  .Values.apps.bahmni_config.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.bahmni_config.resources.requests.cpu }}"
         volumeMounts:
             - name: {{ .Release.Name }}-distro
               subPath: "bahmni_config/"
