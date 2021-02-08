@@ -32,9 +32,14 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-mysql-pvc
      {{ end }}
+      priorityClassName: high-priority
       containers:
         - name: {{ .Release.Name }}-mysql
           image: {{ .Values.apps.mysql.image }}
+          resources:
+            requests:
+              memory: "{{  .Values.apps.mysql.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.mysql.resources.requests.cpu }}"
           ports:
             - containerPort: 3306
           readinessProbe:

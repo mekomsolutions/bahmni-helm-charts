@@ -21,6 +21,10 @@ spec:
       containers:
       - name: {{ .Release.Name }}-implementer-interface
         image: {{ .Values.apps.implementer_interface.image }}
+        resources:
+            requests:
+              memory: "{{  .Values.apps.implementer_interface.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.implementer_interface.resources.requests.cpu }}"
         ports:
         - containerPort: 8902
 {{ end }}{{ end }}{{ end }}

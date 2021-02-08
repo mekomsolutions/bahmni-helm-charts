@@ -67,6 +67,10 @@ spec:
       containers:
       - name: {{ .Release.Name }}-metabase
         image: {{ .Values.apps.metabase.image }}
+        resources:
+            requests:
+              memory: "{{  .Values.apps.metabase.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.metabase.resources.requests.cpu }}"
         ports:
         - name: metabase-port
           containerPort: 3000

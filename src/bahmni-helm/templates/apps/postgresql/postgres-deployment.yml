@@ -32,9 +32,14 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-postgres-pvc
     {{ end }}
+      priorityClassName: high-priority
       containers:
         - name: {{ .Release.Name }}-postgres
           image: {{ .Values.apps.postgresql.image }}
+          resources:
+            requests:
+              memory: "{{  .Values.apps.postgresql.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.postgresql.resources.requests.cpu }}"
           ports:
             - containerPort: 5432
           readinessProbe:
