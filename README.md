@@ -53,8 +53,7 @@ Create nfs and data volumes
 | nfs.hostRole  | Role of the host that will run the nfs server|database   |
 | nfs.storageClassNamespace  |Namespace for nfs storage class | mekomsolutions.net/nfs  |
 | nfs.nfsStorageClass  | Name of the RWX to be created   |mekom-nfs   |
-| nfs.nodeSelector  | Node selector object for placing of the nfs server   | nodeSelector:
-        role: database  |
+| nfs.nodeSelector  | Node selector object for placing of the nfs server   |  |
 | apps.appointments.enabled  |Whether to install the Bahmni appointments app  |true   |
 | apps.appointments.image  |Bahmni appointments Image  |mekomsolutions/appointments   |
 | apps.bahmni_config.enabled  | Bahmni Config Enabled  |true   |
@@ -94,8 +93,7 @@ Create nfs and data volumes
 | apps.postgresql.POSTGRES_PASSWORD  |Postgres default password   | password  |
 | apps.postgresql.POSTGRES_DB  | Postgres default db   | postgres  |
 | apps.postgresql.POSTGRES_USER  | Postgres default user   | postgres  |
-| apps.postgresql.nodeSelector  |Postgres default node selector object   |nodeSelector:
-        role: database   |
+| apps.postgresql.nodeSelector  |Postgres default node selector object   |  |
 | apps.postgresql.storage.storageClass  | Postgres pv storage class   |   |
 | apps.postgresql.storage.size  | Postgres PVC size   |   |
 | apps.postgresql.storage.annotations  |Postgres Deployment custom annotations   |   |
