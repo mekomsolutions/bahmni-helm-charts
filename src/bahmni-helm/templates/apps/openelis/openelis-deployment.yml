@@ -19,6 +19,8 @@ spec:
         - name: {{ .Release.Name }}-openelis-db
           configMap:
             name: {{ .Release.Name }}-postgres-db-scripts
+        - name: {{ .Release.Name }}-log
+          emptyDir: {}
       initContainers:
         - name: init-db
           image: {{ .Values.apps.openelis.initImage }}
@@ -69,6 +71,12 @@ spec:
                     name: {{ .Release.Name }}-openelis-db-config
                     key: OPENELIS_DB_HOST
       containers:
+      - name: logging
+        image: busybox
+        args: [/bin/sh, -c, 'while ! tail -f /usr/local/tomcat/logs/openelis.log ; do sleep 1 ; done']
+        volumeMounts:
+          - name: {{ .Release.Name }}-log
+            mountPath: /usr/local/tomcat/logs
       - name: openelis
         image: {{ .Values.apps.openelis.image }}
         resources:
@@ -78,6 +86,8 @@ spec:
         volumeMounts:
             - name: {{ .Release.Name }}-openelis-props
               mountPath: "/etc/properties/"
+            - name: {{ .Release.Name }}-log
+              mountPath: /usr/local/tomcat/logs
         ports:
         - name: http
           containerPort: 8080
