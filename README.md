@@ -10,7 +10,7 @@
 
 You will need a working kubernetes cluster to use this project.
 
-### Deploying K3s  cluster using multipass
+### Deploying a K3s  cluster using multipass
 
 #### Setup local k3s node
 Install [Multipass](https://multipass.run/docs)
@@ -34,7 +34,7 @@ Should return
 NAME   STATUS   ROLES    AGE     VERSION
 k3s    Ready    master   5m12s   v1.19.5+k3s2
 ```
-Label the node that will hold datbase volumes and store nfs data
+Label the node that will hold database volumes and store nfs data
 
 ```kubectl label node k3s role=database```
 

@@ -86,6 +86,9 @@ spec:
             - name: {{ .Release.Name }}-data
               subPath: "openmrs/configuration_checksums"
               mountPath: "/usr/local/tomcat/.OpenMRS/configuration_checksums/"
+            - name: haiti-data
+              subPath: "openmrs/bahmni"
+              mountPath: "/home/bahmni/"
         ports:
         - name: openmrs-port
           containerPort: 8080

@@ -22,6 +22,9 @@ spec:
         - name: {{ .Release.Name }}-mart-db-init
           configMap:
             name: {{ .Release.Name }}-postgres-db-scripts
+        - name: haiti-data
+          persistentVolumeClaim:
+            claimName: haiti-data-pvc
       initContainers:
         - name: {{ .Release.Name }}-init-db
           image: {{ .Values.apps.bahmni_mart.initImage }} 
@@ -83,6 +86,9 @@ spec:
               subPath: "bahmni_config/"
             - name: {{ .Release.Name }}-mart-props-vol
               mountPath: "/opt/bahmni-mart/conf"
+            - name: haiti-data
+              subPath: "openmrs/bahmni"
+              mountPath: "/home/bahmni/"
         env:
             - name: OPENMRS_DB_HOST
               valueFrom:

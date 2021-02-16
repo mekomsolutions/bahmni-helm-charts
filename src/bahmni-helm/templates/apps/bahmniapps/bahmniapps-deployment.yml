@@ -26,7 +26,7 @@ spec:
         volumeMounts:
             - name: {{ .Release.Name }}-distro
               subPath: "bahmni_emr/bahmniapps"
-              mountPath: "/var/www/bahmni"
+              mountPath: "/var/www"
         ports:
         - containerPort: 8900
 {{ end }}{{ end }}{{ end }}
