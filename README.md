@@ -66,11 +66,37 @@ Wait until the nfs-provisioner pod starts
 ```nfs-provisioner-0   1/1     Running   0          5m31s```
 
 #### Deploy configs and resources
-```kubectl apply -f ./resources```
+Create data and distro volumes
 
 ```kubectl apply -f ./configs```
 
+Prepopulate the distro volume with your preffered distro
+
+Get the distro
+
+```wget https://nexus.mekomsolutions.net/repository/maven-snapshots/net/mekomsolutions/bahmni-distro-c2c/1.0.0-SNAPSHOT/bahmni-distro-c2c-1.0.0-20210215.083052-70.zip```
+
+Create the distro folder
+
+```mkdir distro```
+
+Unzip the distro
+
+```unzip bahmni-distro-c2c-1.0.0-20210215.083052-70.zip -d distro```
+
+Upload distro to the distro pvc
+
+```../../../scripts/upload-files.sh mdlh/alpine-rsync  ./distro/ haiti-distro-pvc```
+
+Create mysql and postgres shared resources (configs and pvcs)
+
 ```kubectl apply -f ./common```
+
+Create apps shared resources
+
+```kubectl apply -f ./resources```
+
+Deploy bahmni apps
 
 ```kubectl apply -f ./apps/ -R```
 
@@ -154,13 +180,13 @@ Get the update pod name
 
 Get The config
 
-```wget https://nexus.mekomsolutions.net/repository/maven-releases/net/mekomsolutions/bahmni-distro-haiti/1.0.0/bahmni-distro-haiti-1.0.0.zip```
+```wget https://nexus.mekomsolutions.net/repository/maven-snapshots/net/mekomsolutions/bahmni-distro-c2c/1.0.0-SNAPSHOT/bahmni-distro-c2c-1.0.0-20210215.083052-70.zip```
 
 Create the unzip destination
 
 ```mkdir distro```
 
-```unzip bahmni-distro-haiti-1.0.0.zip -d distro```
+```unzip bahmni-distro-c2c-1.0.0-20210215.083052-70.zip -d distro```
 
 Upload the new configs
 
