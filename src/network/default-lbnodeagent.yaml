@@ -1,9 +1,0 @@
----
-apiVersion: "purelb.io/v1"
-kind: LBNodeAgent
-metadata:
-  name: default
-  namespace: purelb
-spec:
-  local:
-    localint: default
