@@ -22,9 +22,10 @@ metadata:
     app: {{ .Release.Name }}-proxy
 spec:
   type: LoadBalancer
+  {{ if .Values.apps.proxy.service.loadBalancerIP }}loadBalancerIP: {{ .Values.apps.proxy.service.loadBalancerIP }} {{ end }}
   selector:
     app: {{ .Release.Name }}-proxy
   ports:
-  - port: 8000
+  - port: {{ .Values.apps.proxy.service.port }}
     targetPort: 80
 {{ end }}{{ end }}{{ end }}

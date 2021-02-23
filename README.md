@@ -48,8 +48,13 @@ Create nfs and data folders
 
 
 #### Generating Kubernetes manifests from the Helm Chart
+```cd ../```
 
-```helm template haiti bahmni-helm --output-dir haiti-distro  ```
+```helm template haiti bahmni-helm --output-dir haiti-distro ```
+
+In case you need to override chart values
+
+ ```cp custom-values.yaml.example to custom-values.yaml``` and use ```helm template -f custom-values.yaml haiti bahmni-helm --output-dir haiti-distro``` 
 
 
 ```cd ./haiti-distro/bahmni-helm/templates```

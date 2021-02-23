@@ -37,5 +37,5 @@ Upload images to in cluster registry
 
 ```skopeo sync --dest-tls-verify=false --src dir --dest docker ./images/ 192.168.0.99/```
 
-#### See the file ```custom-values.yaml``` for an example of a values file to override images when generating manifests using helm.
+See the file ```custom-values.yaml.example``` for an example of a values file to override images when generating manifests using helm.
 

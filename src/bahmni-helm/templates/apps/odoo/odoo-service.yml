@@ -6,6 +6,7 @@ metadata:
   labels:
     app: {{ .Release.Name }}-odoo
 spec:
+  {{ if .Values.apps.odoo.service.loadBalancerIP }}loadBalancerIP: {{ .Values.apps.odoo.service.loadBalancerIP }} {{ end }}
   type: LoadBalancer
   selector:
     app: {{ .Release.Name }}-odoo

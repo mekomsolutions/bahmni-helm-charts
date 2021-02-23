@@ -81,6 +81,9 @@ apps:
       requests:
         cpu: "0.5"
         memory: "512Mi"
+    service:
+      loadBalancerIP: ''
+      port: 3000
   mysql:
     image: mariadb:10.3
     enabled: true
@@ -123,6 +126,8 @@ apps:
       requests:
         cpu: "0.5"
         memory: "512Mi"
+    service:
+      loadBalancerIP: ''
   odoo_connect:
     image: mekomsolutions/odoo-connect
     enabled: true
@@ -145,6 +150,8 @@ apps:
       requests:
         cpu: "0.5"
         memory: "512Mi"
+    service:
+      loadBalancerIP: ''
   openmrs:
     initImage: mariadb:10.3
     image: mekomsolutions/openmrs
@@ -164,6 +171,7 @@ apps:
       requests:
         cpu: "0.5"
         memory: "512Mi"
+
   postgresql:
     image: postgres:9.6-alpine
     enabled: true
@@ -198,6 +206,9 @@ apps:
       requests:
         cpu: "0.5"
         memory: "512Mi"
+    service:
+      loadBalancerIP: ''
+      port: 8000
 ingress:
   enabled: false
   annotations: {}
