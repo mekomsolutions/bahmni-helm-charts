@@ -7,6 +7,7 @@ metadata:
     app: {{ .Release.Name }}-openelis
 spec:
   type: LoadBalancer
+  {{ if .Values.apps.openelis.service.loadBalancerIP }}loadBalancerIP: {{ .Values.apps.openelis.service.loadBalancerIP }} {{ end }}
   selector:
     app: {{ .Release.Name }}-openelis
   ports:

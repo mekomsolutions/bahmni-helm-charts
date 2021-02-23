@@ -1,0 +1,49 @@
+nfs:
+  enabled: true
+  image: 192.168.0.99/nfs-ganesha-server-and-external-provisioner
+apps:
+  updatebox:
+    image: 192.168.0.99/alpine-rsync
+  appointments:
+    image: 192.168.0.99/appointments
+  bahmni_config:
+    image: 192.168.0.99/nginx:alpine
+  bahmni_filestore:
+    image: 192.168.0.99/nginx:alpine
+  bahmni_mart:
+    initImage: 192.168.0.99/postgres:alpine
+    image: 192.168.0.99/bahmni-mart
+  bahmni_reports:
+    image: 192.168.0.99/bahmni-reports
+  bahmniapps:
+    image: 192.168.0.99/bahmniapps
+  implementer_interface:
+    image: 192.168.0.99/implementer-interface
+  metabase:
+    initImage: 192.168.0.99/postgres:alpine
+    image: 192.168.0.99/metabase
+    service:
+      loadBalancerIP: '192.168.0.10'
+  mysql:
+    image: 192.168.0.99/mariadb:10.3
+  odoo:
+    initImage: 192.168.0.99/postgres:alpine
+    image: 192.168.0.99/odoo
+    service:
+      loadBalancerIP: '192.168.0.11'
+  odoo_connect:
+    image: 192.168.0.99/odoo-connect
+  openelis:
+    image: 192.168.0.99/openelis
+    initImage: 192.168.0.99/openelis-init
+    service:
+      loadBalancerIP: '192.168.0.12'
+  openmrs:
+    initImage: 192.168.0.99/mariadb:10.3
+    image: 192.168.0.99/openmrs
+  postgresql:
+    image: 192.168.0.99/postgres:9.6-alpine
+  proxy:
+    image: 192.168.0.99/proxy:latest
+    service:
+      loadBalancerIP: '192.168.0.13'
