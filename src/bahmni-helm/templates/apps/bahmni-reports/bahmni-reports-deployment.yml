@@ -16,6 +16,9 @@ spec:
         - name: {{ .Release.Name }}-distro
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-distro-pvc
+        - name: {{ .Release.Name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-data-pvc
       containers:
       - name: {{ .Release.Name }}-bahmni-reports
         image: {{ .Values.apps.bahmni_reports.image }}
@@ -27,6 +30,9 @@ spec:
             - name: {{ .Release.Name }}-distro
               mountPath: "/var/www/bahmni_config"
               subPath: "bahmni_config/"
+            - name: {{ .Release.Name }}-data
+              mountPath: "/reports"
+              subPath: "bahmni-reports-data/"
         ports:
         - containerPort: 8080
         env:

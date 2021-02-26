@@ -86,7 +86,16 @@ spec:
             - name: {{ .Release.Name }}-data
               subPath: "openmrs/configuration_checksums"
               mountPath: "/usr/local/tomcat/.OpenMRS/configuration_checksums/"
-            - name: haiti-data
+            - name: {{ .Release.Name }}-data
+              subPath: "openmrs/lucene"
+              mountPath: "/usr/local/tomcat/.OpenMRS/lucene/"
+            - name: {{ .Release.Name }}-data
+              subPath: "openmrs/activemq-data"
+              mountPath: "/usr/local/tomcat/.OpenMRS/activemq-data/"
+            - name: {{ .Release.Name }}-distro
+              subPath: "openmrs_owa/"
+              mountPath: "/usr/local/tomcat/.OpenMRS/owa/"
+            - name: {{ .Release.Name }}-data
               subPath: "openmrs/bahmni"
               mountPath: "/home/bahmni/"
         ports:
