@@ -1,4 +1,4 @@
-echo $NAMESPACE
+: "${NAMESPACE:=default}"
 if [ $# -eq 2 ]; then
     echo "Missing arguments"
     echo "format ./download.sh <image> <dest-dir>  <source-pvc>"
@@ -6,7 +6,7 @@ if [ $# -eq 2 ]; then
     exit 1
 fi
 name=pvc-mounter
-cat <<EOF | kubectl apply -f -
+cat <<EOF | kubectl apply -n $NAMESPACE -f -
 apiVersion: v1
 kind: Pod
 metadata:
@@ -32,13 +32,13 @@ spec:
 EOF
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
-POD_NAME=$(kubectl get pod -l app=$name -o jsonpath="{.items[0].metadata.name}")
-kubectl wait --for=condition=ready --timeout=60s pod $POD_NAME
+POD_NAME=$(kubectl get pod -l app=$name -o jsonpath="{.items[0].metadata.name}" -n $NAMESPACE)
+kubectl wait --for=condition=ready --timeout=60s pod $POD_NAME -n $NAMESPACE
 n=0
 until [ "$n" -ge 5 ]
 do
-   $DIR/krsync -av --progress --stats $POD_NAME:/$3/ $2 && break  # substitute your command here
+   $DIR/krsync -av --progress --stats $POD_NAME@$NAMESPACE:/$3/ $2 && break  # substitute your command here
    n=$((n+1)) 
    sleep 15
 done
-kubectl delete pod $POD_NAME --grace-period=0 --force
+kubectl delete pod $POD_NAME --grace-period=0 --force -n $NAMESPACE

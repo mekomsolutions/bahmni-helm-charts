@@ -26,14 +26,7 @@ spec:
           protocol: TCP
         - name: udp
           containerPort: 514
-          protocol: UDP
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            memory: "1024Mi"
-            cpu: "800m"
+          protocol: UDP        
         volumeMounts:
           - name: logs
             mountPath: "/var/log"
