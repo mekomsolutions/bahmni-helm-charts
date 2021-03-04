@@ -237,7 +237,7 @@ To scale it back up. This will force the OpenMRS pod to be recreated restarting 
 
 #### Download files from the container's data folder
 
-```scripts/krsync -av --progress --stats  $POD_NAME:/data data```
+```./scripts/download-files.sh mdlh/alpine-rsync ./data/  haiti-data-pvc```
 This could be used to download backups and other files.
 
 ##### NOTE: Sometimes this command my fail if the pipe to the pod breaks when using ```kubectl cp``` This will fail silently and there is no way to know that the copy failed. With this helper it will fail with a non zero error code
