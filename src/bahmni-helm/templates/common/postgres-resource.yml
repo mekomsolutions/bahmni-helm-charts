@@ -12,7 +12,7 @@ metadata:
   name: {{ .Release.Name }}-postgres-pv
 spec:
   capacity:
-    storage: 2Gi
+    storage: {{  .Values.apps.postgresql.storage.size }}
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
@@ -41,5 +41,5 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: {{  .Values.apps.postgresql.storage.size }}
 {{ end }}{{ end }}{{ end }}{{ end }}

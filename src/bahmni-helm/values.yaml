@@ -37,6 +37,32 @@ apps:
       requests:
         cpu: "0.5"
         memory: "512Mi"
+  backup_services:
+    schedule: "*/15 * * * *"
+    storage:
+      storageClass: mekom-nfs
+      accessMode: ReadWriteMany
+      size: 2Gi
+      annotations: {}
+      nodeAffinity:
+        required:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: role
+              operator: In
+              values:
+              - database
+    localPath: /mnt/disks/ssd1/backup/
+    nodeSelector:
+          role: database
+    enabled: true
+    mysql:
+      image: mekomsolutions/mysql_backup
+    postgres:
+      image: mekomsolutions/postgres_backup
+    filestore:
+      image: mekomsolutions/filestore_backup
+
   bahmni_mart:
     initImage: postgres:alpine
     image: mekomsolutions/bahmni-mart

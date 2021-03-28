@@ -12,7 +12,7 @@ metadata:
   name: {{ .Release.Name }}-mysql-pv
 spec:
   capacity:
-    storage: 2Gi
+    storage: {{  .Values.apps.mysql.storage.size }}
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
@@ -41,5 +41,5 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: {{  .Values.apps.mysql.storage.size }}
 {{ end }}{{ end }}{{ end }}{{ end }}

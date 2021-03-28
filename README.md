@@ -46,6 +46,8 @@ Create nfs and data folders
 
 ```multipass exec k3s -- sudo mkdir -p /mnt/disks/ssd1/data/mysql```
 
+```multipass exec k3s -- sudo mkdir -p /mnt/disks/ssd1/backup```
+
 
 #### Generating Kubernetes manifests from the Helm Chart
 ```cd ../```

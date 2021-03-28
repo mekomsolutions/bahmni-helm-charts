@@ -1,0 +1,254 @@
+{{ if .Values.apps }}{{ if .Values.apps.backup_services }} {{ if .Values.apps.backup_services.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-mysql-backup
+spec:
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  schedule: {{ .Values.apps.backup_services.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Release.Name }}-mysql-backup
+            image: {{ .Values.apps.backup_services.mysql.image }}
+            env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                    name: {{ .Release.Name }}-openmrs-configs
+                    key: OPENMRS_DB_HOST
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                    name: {{ .Release.Name }}-openmrs-configs
+                    key: OPENMRS_DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openmrs-configs
+                  key: OPENMRS_DB_PASSWORD
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+            - name: {{ .Release.Name }}-backup-services-storage
+              mountPath: "/opt/backup"
+              subPath: "mysql"
+          restartPolicy: OnFailure
+          {{- with .Values.apps.backup_services.nodeSelector }}
+          nodeSelector: 
+            {{- toYaml . | nindent 12 }}
+          {{end}}
+          volumes:
+          - name: {{ .Release.Name }}-backup-services-storage
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-backup-services-pvc
+
+
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-postres-backup
+spec:
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  schedule: {{ .Values.apps.backup_services.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Release.Name }}-postres-backup
+            image: {{ .Values.apps.backup_services.postgres.image }}
+            env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-odoo-configs
+                  key: ODOO_DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-odoo-configs
+                  key: ODOO_DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-odoo-configs
+                  key: ODOO_DB_PASSWORD
+            imagePullPolicy: IfNotPresent
+
+            volumeMounts:
+            - mountPath: "/opt/backup"
+              name: {{ .Release.Name }}-backup-services-storage
+              subPath: "postres"
+          restartPolicy: OnFailure
+          {{- with .Values.apps.backup_services.nodeSelector }}
+          nodeSelector: 
+            {{- toYaml . | nindent 12 }}
+          {{end}}
+          volumes:
+          - name: {{ .Release.Name }}-backup-services-storage
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-backup-services-pvc
+
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-firestore-backup
+spec:
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  schedule: {{ .Values.apps.backup_services.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Release.Name }}-firestore-backup
+            image: {{ .Values.apps.backup_services.filestore.image }}
+            env:
+            - name: FILESTORE_PATH
+              value: "/opt/data/"
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+            - mountPath: "/opt/backup"
+              name: {{ .Release.Name }}-backup-services-storage
+              subPath: "filestore"
+            - name: {{ .Release.Name }}-data
+              mountPath: "/opt/data/"
+          restartPolicy: OnFailure
+          {{- with .Values.apps.backup_services.nodeSelector }}
+          nodeSelector: 
+            {{- toYaml . | nindent 12 }}
+          {{end}}
+          volumes:
+          - name: {{ .Release.Name }}-backup-services-storage
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-backup-services-pvc
+          - name: {{ .Release.Name }}-data
+            persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-data-pvc
+
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-metabase-backup
+spec:
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  schedule: {{ .Values.apps.backup_services.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Release.Name }}-metabase-backup
+            image: {{ .Values.apps.backup_services.postgres.image }}
+            env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-metabase-configs
+                  key: METABASE_DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-metabase-configs
+                  key: METABASE_DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-metabase-configs
+                  key: METABASE_DB_PASSWORD
+            imagePullPolicy: IfNotPresent
+
+            volumeMounts:
+            - mountPath: "/opt/backup"
+              name: {{ .Release.Name }}-backup-services-storage
+              subPath: "postres"
+          restartPolicy: OnFailure
+          {{- with .Values.apps.backup_services.nodeSelector }}
+          nodeSelector: 
+            {{- toYaml . | nindent 12 }}
+          {{end}}
+          volumes:
+          - name: {{ .Release.Name }}-backup-services-storage
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-backup-services-pvc
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-openelis-backup
+spec:
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  schedule: {{ .Values.apps.backup_services.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Release.Name }}-openelis-backup
+            image: {{ .Values.apps.backup_services.postgres.image }}
+            env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-postgres-configs
+                  key: POSTGRES_HOST
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-openelis-db-config
+                  key: OPENELIS_DB_PASSWORD
+            imagePullPolicy: IfNotPresent
+
+            volumeMounts:
+            - mountPath: "/opt/backup"
+              name: {{ .Release.Name }}-backup-services-storage
+              subPath: "postres"
+          restartPolicy: OnFailure
+          {{- with .Values.apps.backup_services.nodeSelector }}
+          nodeSelector: 
+            {{- toYaml . | nindent 12 }}
+          {{end}}
+          volumes:
+          - name: {{ .Release.Name }}-backup-services-storage
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-backup-services-pvc
+{{ end }}{{ end }}{{ end }}
