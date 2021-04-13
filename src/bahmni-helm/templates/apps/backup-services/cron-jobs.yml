@@ -2,7 +2,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-mysql-backup
+  name: {{ .Release.Name }}-openmrs-db-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -12,7 +12,7 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-mysql-backup
+          - name: {{ .Release.Name }}-openmrs-db-backup
             image: {{ .Values.apps.backup_services.mysql.image }}
             env:
             - name: DB_HOST
@@ -56,7 +56,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-postres-backup
+  name: {{ .Release.Name }}-odoo-db-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -66,7 +66,7 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-postres-backup
+          - name: {{ .Release.Name }}-odoo-db-backup
             image: {{ .Values.apps.backup_services.postgres.image }}
             env:
             - name: DB_HOST
@@ -110,7 +110,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-firestore-backup
+  name: {{ .Release.Name }}-filestore-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -120,7 +120,7 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-firestore-backup
+          - name: {{ .Release.Name }}-filestore-backup
             image: {{ .Values.apps.backup_services.filestore.image }}
             env:
             - name: FILESTORE_PATH
@@ -150,7 +150,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-metabase-backup
+  name: {{ .Release.Name }}-metabase-db-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -160,7 +160,7 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-metabase-backup
+          - name: {{ .Release.Name }}-metabase-db-backup
             image: {{ .Values.apps.backup_services.postgres.image }}
             env:
             - name: DB_HOST
@@ -203,7 +203,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-openelis-backup
+  name: {{ .Release.Name }}-openelis-db-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -213,7 +213,7 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-openelis-backup
+          - name: {{ .Release.Name }}-openelis-db-backup
             image: {{ .Values.apps.backup_services.postgres.image }}
             env:
             - name: DB_HOST
