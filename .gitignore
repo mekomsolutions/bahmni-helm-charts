@@ -12,4 +12,4 @@ ehthumbs.db
 Thumbs.db
 *-distro
 images
-custom-values.yaml
+custom-values*.yaml

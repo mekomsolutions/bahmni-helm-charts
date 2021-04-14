@@ -35,7 +35,7 @@ spec:
       priorityClassName: high-priority
       containers:
         - name: {{ .Release.Name }}-postgres
-          image: {{ .Values.apps.postgresql.image }}
+          image: "{{ .Values.docker_registry }}/{{ .Values.apps.postgresql.image }}"
           resources:
             requests:
               memory: "{{  .Values.apps.postgresql.resources.requests.memory }}"

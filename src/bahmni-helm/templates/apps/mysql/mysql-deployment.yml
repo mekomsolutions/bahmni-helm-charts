@@ -35,7 +35,7 @@ spec:
       priorityClassName: high-priority
       containers:
         - name: {{ .Release.Name }}-mysql
-          image: {{ .Values.apps.mysql.image }}
+          image: "{{ .Values.docker_registry }}/{{ .Values.apps.mysql.image }}"
           resources:
             requests:
               memory: "{{  .Values.apps.mysql.resources.requests.memory }}"

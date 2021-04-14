@@ -27,7 +27,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       initContainers:
         - name: {{ .Release.Name }}-init-db
-          image: {{ .Values.apps.bahmni_mart.initImage }} 
+          image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_mart.initImage }}" 
           volumeMounts:
             - name: {{ .Release.Name }}-mart-db-init
               mountPath: "/mnt/"
@@ -75,7 +75,7 @@ spec:
                   key: ANALYTICS_DB_PASSWORD
       containers:
       - name: {{ .Release.Name }}-bahmni-mart
-        image: {{ .Values.apps.bahmni_mart.image }} 
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_mart.image }}" 
         resources:
             requests:
               memory: "{{  .Values.apps.bahmni_mart.resources.requests.memory }}"
@@ -131,5 +131,8 @@ spec:
                   name: {{ .Release.Name }}-mart-config
                   key: ANALYTICS_DB_PASSWORD
             - name: CRON_TIME
-              value: "0/5 * * * *"
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-mart-config
+                  key: CRON_TIME
 {{ end }}{{ end }}{{ end }}

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-updatebox
-        image: {{ .Values.apps.updatebox.image }} 
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.updatebox.image }}" 
         command: [ "sh", "-c", " tail -f /dev/null" ]
         volumeMounts:
         - name: {{ .Release.Name }}-distro

@@ -1,50 +1,45 @@
+docker_registry: 192.168.0.99
 nfs:
   enabled: true
-  image: 192.168.0.99/nfs-ganesha-server-and-external-provisioner
 apps:
   updatebox:
-    image: 192.168.0.99/alpine-rsync
+    enabled: true
   appointments:
-    image: 192.168.0.99/appointments
+    enabled: true
   bahmni_config:
-    image: 192.168.0.99/nginx:alpine
+    enabled: true
   bahmni_filestore:
-    image: 192.168.0.99/nginx:alpine
+    enabled: true
   bahmni_mart:
-    initImage: 192.168.0.99/postgres:alpine
-    image: 192.168.0.99/bahmni-mart
+    enabled: true
   bahmni_reports:
-    image: 192.168.0.99/bahmni-reports
+    enabled: true
   bahmniapps:
-    image: 192.168.0.99/bahmniapps
+    enabled: true
   implementer_interface:
-    image: 192.168.0.99/implementer-interface
+    enabled: true
   metabase:
-    initImage: 192.168.0.99/postgres:alpine
-    image: 192.168.0.99/metabase
+    enabled: true
     service:
       loadBalancerIP: '192.168.0.10'
   mysql:
-    image: 192.168.0.99/mariadb:10.3
+    enabled: true
   odoo:
-    initImage: 192.168.0.99/postgres:alpine
-    image: 192.168.0.99/odoo
+    enabled: true
     service:
       loadBalancerIP: '192.168.0.11'
   odoo_connect:
-    image: 192.168.0.99/odoo-connect
+    enabled: true
   openelis:
-    image: 192.168.0.99/openelis
-    initImage: 192.168.0.99/openelis-init
+    enabled: true
     service:
       loadBalancerIP: '192.168.0.12'
   openmrs:
-    initImage: 192.168.0.99/mariadb:10.3
-    image: 192.168.0.99/openmrs
+    enabled: true
   postgresql:
-    image: 192.168.0.99/postgres:9.6-alpine
+    enabled: true
   proxy:
-    image: 192.168.0.99/proxy:latest
+    enabled: true
     service:
       loadBalancerIP: '192.168.0.13'
       port: 80

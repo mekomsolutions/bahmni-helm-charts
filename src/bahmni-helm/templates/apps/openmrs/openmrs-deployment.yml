@@ -27,7 +27,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       initContainers:
         - name: {{ .Release.Name }}-init-db
-          image: {{ .Values.apps.openmrs.initImage }}
+          image: "{{ .Values.docker_registry }}/{{ .Values.apps.openmrs.initImage }}"
           volumeMounts:
             - name: {{ .Release.Name }}-openmrs-db
               mountPath: "/mnt/"
@@ -66,7 +66,7 @@ spec:
       priorityClassName: high-priority
       containers:
       - name: openmrs
-        image: {{ .Values.apps.openmrs.image }}
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.openmrs.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.openmrs.resources.requests.memory }}"

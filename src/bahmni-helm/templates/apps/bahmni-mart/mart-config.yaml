@@ -10,6 +10,7 @@ data:
   ANALYTICS_DB_NAME: {{.Values.apps.bahmni_mart.ANALYTICS_DB_NAME }} 
   ANALYTICS_DB_USER: {{.Values.apps.bahmni_mart.ANALYTICS_DB_USER }}
   ANALYTICS_DB_PASSWORD: {{.Values.apps.bahmni_mart.ANALYTICS_DB_PASSWORD }}
+  CRON_TIME: {{.Values.apps.bahmni_mart.CRON_TIME }}
 ---
 apiVersion: v1
 kind: ConfigMap

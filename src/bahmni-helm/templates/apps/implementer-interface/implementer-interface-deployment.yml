@@ -17,10 +17,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-distro-pvc
         - name: {{ .Release.Name }}-httpd-config
-          
       containers:
       - name: {{ .Release.Name }}-implementer-interface
-        image: {{ .Values.apps.implementer_interface.image }}
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.implementer_interface.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.implementer_interface.resources.requests.memory }}"

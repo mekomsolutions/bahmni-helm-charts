@@ -18,7 +18,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       containers:
       - name: bahmni-filestore
-        image: {{ .Values.apps.bahmni_filestore.image }} 
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_filestore.image }}" 
         resources:
             requests:
               memory: "{{  .Values.apps.bahmni_filestore.resources.requests.memory }}"

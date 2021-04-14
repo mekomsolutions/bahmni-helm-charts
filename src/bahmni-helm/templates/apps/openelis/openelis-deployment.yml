@@ -23,7 +23,7 @@ spec:
           emptyDir: {}
       initContainers:
         - name: init-db
-          image: {{ .Values.apps.openelis.initImage }}
+          image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.initImage }}"
           volumeMounts:
             - name: {{ .Release.Name }}-openelis-db
               mountPath: "/mnt/"
@@ -72,13 +72,13 @@ spec:
                     key: OPENELIS_DB_HOST
       containers:
       - name: logging
-        image: busybox
+        image: "{{ .Values.docker_registry }}/busybox"
         args: [/bin/sh, -c, 'while ! tail -f /usr/local/tomcat/logs/openelis.log ; do sleep 1 ; done']
         volumeMounts:
           - name: {{ .Release.Name }}-log
             mountPath: /usr/local/tomcat/logs
       - name: openelis
-        image: {{ .Values.apps.openelis.image }}
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.openelis.resources.requests.memory }}"
