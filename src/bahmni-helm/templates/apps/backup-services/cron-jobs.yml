@@ -39,7 +39,7 @@ spec:
             volumeMounts:
             - name: {{ .Release.Name }}-backup-services-storage
               mountPath: "/opt/backup"
-              subPath: "mysql"
+              subPath: "openmrs"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
           nodeSelector: 
@@ -94,7 +94,7 @@ spec:
             volumeMounts:
             - mountPath: "/opt/backup"
               name: {{ .Release.Name }}-backup-services-storage
-              subPath: "postres"
+              subPath: "odoo"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
           nodeSelector: 
@@ -188,7 +188,7 @@ spec:
             volumeMounts:
             - mountPath: "/opt/backup"
               name: {{ .Release.Name }}-backup-services-storage
-              subPath: "postres"
+              subPath: "metabase"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
           nodeSelector: 
