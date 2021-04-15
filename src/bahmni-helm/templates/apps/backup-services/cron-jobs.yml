@@ -241,7 +241,7 @@ spec:
             volumeMounts:
             - mountPath: "/opt/backup"
               name: {{ .Release.Name }}-backup-services-storage
-              subPath: "postres"
+              subPath: "openelis"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
           nodeSelector: 
