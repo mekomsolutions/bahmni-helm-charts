@@ -21,7 +21,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       containers:
       - name: {{ .Release.Name }}-bahmni-reports
-        image: {{ .Values.apps.bahmni_reports.image }}
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_reports.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.bahmni_reports.resources.requests.memory }}"

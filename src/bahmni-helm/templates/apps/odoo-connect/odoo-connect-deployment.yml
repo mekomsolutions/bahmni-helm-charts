@@ -18,7 +18,7 @@ spec:
             name:  {{ .Release.Name }}-erp-config
       containers:
       - name: {{ .Release.Name }}-odoo-connect
-        image: {{ .Values.apps.odoo_connect.image }}
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.odoo_connect.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.odoo_connect.resources.requests.memory }}"

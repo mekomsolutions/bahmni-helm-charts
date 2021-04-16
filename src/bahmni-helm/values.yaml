@@ -1,23 +1,15 @@
 isAppliance: true
 selectDbHost: true
 rwxStorageClass: mekom-nfs
-nfsLocalPath: /mnt/disks/ssd1/nfs
 postgresLocalPath: /mnt/disks/ssd1/data/postgresql
 mysqlLocalPath: /mnt/disks/ssd1/data/mysql
 databaseHostRole: database
-nfs:
-  enabled: true
-  image: enyachoke/nfs-ganesha-server-and-external-provisioner
-  hostRole: database
-  storageClassNamespace: mekomsolutions.net/nfs
-  nfsStorageClass: mekom-nfs
-  nodeSelector:
-        role: database
+docker_registry: docker.io
 apps:
   updatebox:
     image: mdlh/alpine-rsync
   appointments:
-    enabled: true
+    enabled: false
     image: mekomsolutions/appointments
     resources:
       requests:
@@ -25,14 +17,14 @@ apps:
         memory: "512Mi"
   bahmni_config:
     image: nginx:alpine
-    enabled: true
+    enabled: false
     resources:
       requests:
         cpu: "0.5"
         memory: "512Mi"
   bahmni_filestore:
     image: nginx:alpine
-    enabled: true
+    enabled: false
     resources:
       requests:
         cpu: "0.5"
@@ -66,32 +58,33 @@ apps:
   bahmni_mart:
     initImage: postgres:alpine
     image: mekomsolutions/bahmni-mart
-    enabled: true
+    enabled: false
     ANALYTICS_DB_HOST: postgres
     ANALYTICS_DB_NAME: analytics
     ANALYTICS_DB_PASSWORD: password
     ANALYTICS_DB_USER: analytics
+    CRON_TIME: "0/5 * * * *"
     resources:
       requests:
         cpu: "0.5"
         memory: "512Mi"
   bahmni_reports:
     image: mekomsolutions/bahmni-reports
-    enabled: true
+    enabled: false
     resources:
       requests:
         cpu: "0.5"
         memory: "512Mi"
   bahmniapps:
     image: mekomsolutions/bahmniapps
-    enabled: true
+    enabled: false
     resources:
       requests:
         cpu: "0.5"
         memory: "512Mi"
   implementer_interface:
     image: mekomsolutions/implementer-interface
-    enabled: true
+    enabled: false
     resources:
       requests:
         cpu: "0.5"
@@ -99,7 +92,7 @@ apps:
   metabase:
     initImage: postgres:alpine
     image: mekomsolutions/metabase
-    enabled: true
+    enabled: false
     METABASE_DB_NAME: metabase
     METABASE_DB_PASSWORD: metabase
     METABASE_DB_USER: metabase
@@ -112,7 +105,7 @@ apps:
       port: 3000
   mysql:
     image: mariadb:10.3
-    enabled: true
+    enabled: false
     MYSQL_ROOT_USER: root
     MYSQL_ROOT_PASSWORD: password
     resources:
@@ -137,7 +130,7 @@ apps:
   odoo:
     initImage: postgres:alpine
     image: mekomsolutions/odoo
-    enabled: true
+    enabled: false
     ODOO_DB_USER: odoo
     ODOO_DB_PASSWORD: password
     ODOO_DB_NAME: odoo
@@ -156,7 +149,7 @@ apps:
       loadBalancerIP: ''
   odoo_connect:
     image: mekomsolutions/odoo-connect
-    enabled: true
+    enabled: false
     OPENELIS_USER: admin
     OPENELIS_PASSWORD: adminADMIN!
     resources:
@@ -166,7 +159,7 @@ apps:
   openelis:
     image: enyachoke/openelis
     initImage: enyachoke/openelis-init
-    enabled: true
+    enabled: false
     OPENELIS_DB_USER: clinlims
     OPENELIS_DB_PASSWORD: clinlims
     OPENELIS_DB_NAME: clinlims
@@ -181,7 +174,7 @@ apps:
   openmrs:
     initImage: mariadb:10.3
     image: mekomsolutions/openmrs
-    enabled: true
+    enabled: false
     OPENMRS_DB_NAME: openmrs
     OPENMRS_USER: superman
     OPENMRS_PASSWORD: Admin123
@@ -200,7 +193,7 @@ apps:
 
   postgresql:
     image: postgres:9.6-alpine
-    enabled: true
+    enabled: false
     POSTGRES_HOST: postgres
     POSTGRES_PORT: "5432"
     POSTGRES_PASSWORD: password

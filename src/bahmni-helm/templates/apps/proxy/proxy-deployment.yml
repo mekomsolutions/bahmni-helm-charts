@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-proxy
-        image: {{ .Values.apps.proxy.image }} 
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.proxy.image }}" 
         resources:
             requests:
               memory: "{{  .Values.apps.proxy.resources.requests.memory }}"

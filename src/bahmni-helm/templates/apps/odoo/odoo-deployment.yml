@@ -27,7 +27,7 @@ spec:
             claimName: {{ .Release.Name }}-data-pvc
       initContainers:
         - name: {{ .Release.Name }}-init-db
-          image: {{ .Values.apps.odoo.initImage }}
+          image: "{{ .Values.docker_registry }}/{{ .Values.apps.odoo.initImage }}"
           volumeMounts:
             - name: {{ .Release.Name }}-odoo-db
               mountPath: "/mnt/"
@@ -71,7 +71,7 @@ spec:
                   key: ODOO_DB_PASSWORD
       containers:
       - name: {{ .Release.Name }}-odoo
-        image: {{ .Values.apps.odoo.image }}
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.odoo.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.odoo.resources.requests.memory }}"
