@@ -1,4 +1,5 @@
 {{ if .Values.apps }}{{ if .Values.apps.backup_services }} {{ if .Values.apps.backup_services.enabled }}
+{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }} 
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -49,8 +50,8 @@ spec:
           - name: {{ .Release.Name }}-backup-services-storage
             persistentVolumeClaim:
               claimName: {{ .Release.Name }}-backup-services-pvc
-
-
+{{ end }}{{ end }}{{ end }}
+{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }} 
 ---
 
 apiVersion: batch/v1beta1
@@ -104,7 +105,9 @@ spec:
           - name: {{ .Release.Name }}-backup-services-storage
             persistentVolumeClaim:
               claimName: {{ .Release.Name }}-backup-services-pvc
+{{ end }}{{ end }}{{ end }}
 
+{{ if .Values.apps }}{{ if .Values.apps.bahmni_filestore }} {{ if .Values.apps.bahmni_filestore.enabled }} 
 ---
 
 apiVersion: batch/v1beta1
@@ -144,7 +147,8 @@ spec:
           - name: {{ .Release.Name }}-data
             persistentVolumeClaim:
                 claimName: {{ .Release.Name }}-data-pvc
-
+{{ end }}{{ end }}{{ end }}
+{{ if .Values.apps }}{{ if .Values.apps.metabase }} {{ if .Values.apps.metabase.enabled }} 
 ---
 
 apiVersion: batch/v1beta1
@@ -198,6 +202,8 @@ spec:
           - name: {{ .Release.Name }}-backup-services-storage
             persistentVolumeClaim:
               claimName: {{ .Release.Name }}-backup-services-pvc
+{{ end }}{{ end }}{{ end }}
+{{ if .Values.apps }}{{ if .Values.apps.openelis }} {{ if .Values.apps.openelis.enabled }} 
 ---
 
 apiVersion: batch/v1beta1
@@ -251,4 +257,5 @@ spec:
           - name: {{ .Release.Name }}-backup-services-storage
             persistentVolumeClaim:
               claimName: {{ .Release.Name }}-backup-services-pvc
+{{ end }}{{ end }}{{ end }}
 {{ end }}{{ end }}{{ end }}
