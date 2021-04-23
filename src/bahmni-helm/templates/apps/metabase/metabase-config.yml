@@ -3,7 +3,7 @@ apiVersion: apps/v1
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-metabase-configs
+  name: metabase-configs
 data:
   METABASE_DB_NAME: metabase
   METABASE_DB_PASSWORD: metabase
@@ -12,9 +12,9 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-metabase-db
+  name: metabase-db
 data:
-  create_openelis_db.sh: |
+  create_metabase_db.sh: |
     #!/bin/bash
     set -e
     export PGPASSWORD=$POSTGRES_PASSWORD

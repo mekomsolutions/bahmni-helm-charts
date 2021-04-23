@@ -2,137 +2,137 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-bahmni-mart
+  name: bahmni-mart
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-bahmni-mart
+      app: bahmni-mart
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-bahmni-mart
+        app: bahmni-mart
     spec:
       volumes:
-        - name: {{ .Release.Name }}-distro
+        - name: distro
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-distro-pvc
-        - name: {{ .Release.Name }}-mart-props-vol
+            claimName: distro-pvc
+        - name: mart-props-vol
           configMap:
-            name: {{ .Release.Name }}-mart-props
-        - name: {{ .Release.Name }}-mart-db-init
+            name: mart-props
+        - name: mart-db-init
           configMap:
-            name: {{ .Release.Name }}-postgres-db-scripts
-        - name: {{ .Release.Name }}-data
+            name: mart-db-scripts
+        - name: data
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-data-pvc
+            claimName: data-pvc
       initContainers:
-        - name: {{ .Release.Name }}-init-db
+        - name: init-db
           image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_mart.initImage }}" 
           volumeMounts:
-            - name: {{ .Release.Name }}-mart-db-init
+            - name: mart-db-init
               mountPath: "/mnt/"
           command: ['sh', '-c', "bash /mnt/create_analytics_db.sh"]
           env:
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_HOST
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_DB
             - name: POSTGRES_USER 
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_PASSWORD
             - name: ANALYTICS_DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: ANALYTICS_DB_HOST
             - name: ANALYTICS_DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: ANALYTICS_DB_NAME
             - name: ANALYTICS_DB_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: ANALYTICS_DB_USER
             - name: ANALYTICS_DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: ANALYTICS_DB_PASSWORD
       containers:
-      - name: {{ .Release.Name }}-bahmni-mart
+      - name: bahmni-mart
         image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_mart.image }}" 
         resources:
             requests:
               memory: "{{  .Values.apps.bahmni_mart.resources.requests.memory }}"
               cpu: "{{ .Values.apps.bahmni_mart.resources.requests.cpu }}"
         volumeMounts:
-            - name: {{ .Release.Name }}-distro
+            - name: distro
               mountPath: "/var/www"
               subPath: "bahmni_config/"
-            - name: {{ .Release.Name }}-mart-props-vol
+            - name: mart-props-vol
               mountPath: "/opt/bahmni-mart/conf"
-            - name: {{ .Release.Name }}-data
+            - name: data
               subPath: "openmrs/bahmni"
               mountPath: "/home/bahmni/"
         env:
             - name: OPENMRS_DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openmrs-configs
+                  name: openmrs-configs
                   key: OPENMRS_DB_HOST
             - name: OPENMRS_DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openmrs-configs
+                  name: openmrs-configs
                   key: OPENMRS_DB_NAME
             - name: OPENMRS_DB_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openmrs-configs
+                  name: openmrs-configs
                   key: OPENMRS_DB_USER
             - name: OPENMRS_DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openmrs-configs
+                  name: openmrs-configs
                   key: OPENMRS_DB_PASSWORD
             - name: ANALYTICS_DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: ANALYTICS_DB_HOST
             - name: ANALYTICS_DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: ANALYTICS_DB_NAME
             - name: ANALYTICS_DB_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: ANALYTICS_DB_USER
             - name: ANALYTICS_DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: ANALYTICS_DB_PASSWORD
             - name: CRON_TIME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mart-config
+                  name: mart-config
                   key: CRON_TIME
 {{ end }}{{ end }}{{ end }}

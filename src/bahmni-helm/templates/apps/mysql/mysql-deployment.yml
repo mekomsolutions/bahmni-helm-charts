@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-mysql
+  name: mysql
   labels:
-    app: {{ .Release.Name }}-mysql
+    app: mysql
 spec:
   replicas: 1
-  serviceName: {{ .Release.Name }}-mysql-headless
+  serviceName: mysql-headless
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-mysql
+      app: mysql
   {{- if ne .Values.isAppliance true }}
   volumeClaimTemplates:
   - metadata:
-      name: {{ .Release.Name }}-mysql-database
+      name: mysql-database
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
@@ -24,17 +24,17 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-mysql
+        app: mysql
     spec:
     {{ if .Values.isAppliance }}
       volumes:
-        - name: {{ .Release.Name }}-mysql-database
+        - name: mysql-database
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-mysql-pvc
+            claimName: mysql-pvc
      {{ end }}
       priorityClassName: high-priority
       containers:
-        - name: {{ .Release.Name }}-mysql
+        - name: mysql
           image: "{{ .Values.docker_registry }}/{{ .Values.apps.mysql.image }}"
           resources:
             requests:
@@ -62,17 +62,17 @@ spec:
                 - 'mysqladmin -uroot -p${MYSQL_ROOT_PASSWORD} ping'
           volumeMounts:
             - mountPath: "/var/lib/mysql"
-              name: {{ .Release.Name }}-mysql-database
+              name: mysql-database
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mysql-configs
+                  name: mysql-configs
                   key: MYSQL_ROOT_PASSWORD
             - name: MYSQL_ROOT_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-mysql-configs
+                  name: mysql-configs
                   key: MYSQL_ROOT_USER
     {{ if .Values.selectDbHost }}
      {{- with .Values.apps.postgresql.nodeSelector }}

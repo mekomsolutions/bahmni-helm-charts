@@ -2,35 +2,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-bahmni-reports
+  name: bahmni-reports
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-bahmni-reports
+      app: bahmni-reports
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-bahmni-reports
+        app: bahmni-reports
     spec:
       volumes:
-        - name: {{ .Release.Name }}-distro
+        - name: distro
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-distro-pvc
-        - name: {{ .Release.Name }}-data
+            claimName: distro-pvc
+        - name: data
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-data-pvc
+            claimName: data-pvc
       containers:
-      - name: {{ .Release.Name }}-bahmni-reports
+      - name: bahmni-reports
         image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_reports.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.bahmni_reports.resources.requests.memory }}"
               cpu: "{{ .Values.apps.bahmni_reports.resources.requests.cpu }}"
         volumeMounts:
-            - name: {{ .Release.Name }}-distro
+            - name: distro
               mountPath: "/var/www/bahmni_config"
               subPath: "bahmni_config/"
-            - name: {{ .Release.Name }}-data
+            - name: data
               mountPath: "/reports"
               subPath: "bahmni-reports-data/"
         ports:
@@ -39,59 +39,59 @@ spec:
           - name: OPENMRS_DB_HOSTNAME 
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_DB_HOST
           - name: OPENMRS_DB_NAME
             value: openmrs
           - name: OPENMRS_DB_USERNAME
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_DB_USER
           - name: MYSQL_PASSWORD
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_DB_PASSWORD
           - name: MYSQL_PASSWORD
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_DB_PASSWORD
           - name:  ERP_DB_HOSTNAME
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-odoo-configs
+                name: odoo-configs
                 key: ODOO_HOST
           - name:  ERP_DB_USERNAME
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-odoo-configs
+                name: odoo-configs
                 key: ODOO_DB_USER
           - name:  ERP_DB_PASSWORD 
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-odoo-configs
+                name: odoo-configs
                 key: ODOO_DB_PASSWORD
           - name:  MYSQL_ROOT_USER
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-mysql-configs
+                name: mysql-configs
                 key: MYSQL_ROOT_USER
           - name:  MYSQL_ROOT_PASSWORD
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-mysql-configs
+                name: mysql-configs
                 key: MYSQL_ROOT_PASSWORD
           - name:  MYSQL_ROOT_PASSWORD
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-mysql-configs
+                name: mysql-configs
                 key: MYSQL_ROOT_PASSWORD
           - name: REPORTS_DB_HOSTNAME
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_DB_HOST
           - name: REPORTS_DB_NAME
             value: bahmni_reports
@@ -102,16 +102,16 @@ spec:
           - name: OPENMRS_HOSTNAME
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_HOST
           - name: OPENMRS_USERNAME
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_USER
           - name: OPENMRS_PASSWORD
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_PASSWORD
 {{ end }}{{ end }}{{ end }}

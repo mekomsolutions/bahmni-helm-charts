@@ -14,21 +14,21 @@ apps:
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "100Mi"
   bahmni_config:
     image: nginx:alpine
     enabled: false
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "100Mi"
   bahmni_filestore:
     image: nginx:alpine
     enabled: false
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "100Mi"
   backup_services:
     schedule: "*/15 * * * *"
     storage:
@@ -67,28 +67,28 @@ apps:
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "256Mi"
   bahmni_reports:
     image: mekomsolutions/bahmni-reports
     enabled: false
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "100Mi"
   bahmniapps:
     image: mekomsolutions/bahmniapps
     enabled: false
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "100Mi"
   implementer_interface:
     image: mekomsolutions/implementer-interface
     enabled: false
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "100Mi"
   metabase:
     initImage: postgres:alpine
     image: mekomsolutions/metabase
@@ -99,7 +99,7 @@ apps:
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "256Mi"
     service:
       loadBalancerIP: ''
       port: 3000
@@ -111,7 +111,7 @@ apps:
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "256Mi"
     nodeSelector:
         role: database
     storage:
@@ -144,9 +144,10 @@ apps:
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "256Mi"
     service:
       loadBalancerIP: ''
+      port: 80
   odoo_connect:
     image: mekomsolutions/odoo-connect
     enabled: false
@@ -155,7 +156,7 @@ apps:
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "100Mi"
   openelis:
     image: enyachoke/openelis
     initImage: enyachoke/openelis-init
@@ -165,10 +166,11 @@ apps:
     OPENELIS_DB_NAME: clinlims
     OPENELIS_ATOMFEED_USER: atomfeed
     OPENELIS_ATOMFEED_PASSWORD: AdminadMIN*
+    OPENELIS_DB_HOST: postgres
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "256Mi"
     service:
       loadBalancerIP: ''
   openmrs:
@@ -202,7 +204,7 @@ apps:
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "256Mi"
     nodeSelector:
         role: database
     storage:
@@ -224,10 +226,10 @@ apps:
     resources:
       requests:
         cpu: "0.5"
-        memory: "512Mi"
+        memory: "100Mi"
     service:
       loadBalancerIP: ''
-      port: 8000
+      port: 80
 ingress:
   enabled: false
   annotations: {}

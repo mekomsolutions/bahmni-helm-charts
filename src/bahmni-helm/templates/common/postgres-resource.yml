@@ -2,14 +2,14 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: {{ .Release.Name }}-postgres-storage
+  name: postgres-storage
 provisioner: kubernetes.io/no-provisioner
 reclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Release.Name }}-postgres-pv
+  name: postgres-pv
 spec:
   capacity:
     storage: {{  .Values.apps.postgresql.storage.size }}
@@ -17,7 +17,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
-  storageClassName: {{ .Release.Name }}-postgres-storage
+  storageClassName: postgres-storage
   local:
     path: {{ .Values.postgresLocalPath }}
   nodeAffinity:
@@ -32,11 +32,11 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-postgres-pvc
+  name: postgres-pvc
   labels:
-    app: {{ .Release.Name }}-postgres
+    app: postgres
 spec:
-  storageClassName: {{ .Release.Name }}-postgres-storage
+  storageClassName: postgres-storage
   accessModes:
   - ReadWriteOnce
   resources:

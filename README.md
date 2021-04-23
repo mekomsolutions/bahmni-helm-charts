@@ -93,15 +93,12 @@ Unzip the distro
 
 Upload distro to the distro pvc
 
-```../../../scripts/upload-files.sh mdlh/alpine-rsync  ./distro/ haiti-distro-pvc```
+```../../../scripts/upload-files.sh mdlh/alpine-rsync  ./distro/ distro-pvc```
 
 Create mysql and postgres shared resources (configs and pvcs)
 
 ```kubectl apply -f ./common```
 
-Create apps shared resources
-
-```kubectl apply -f ./resources```
 
 Deploy bahmni apps
 
@@ -140,7 +137,6 @@ Get the system endpoints
 
 ```
 odoo                    LoadBalancer   10.43.121.169   192.168.64.7   8069:31354/TCP                                                                                              10h
-openelis                LoadBalancer   10.43.175.49    192.168.64.7   8080:30984/TCP                                                                                              10h
 proxy                   LoadBalancer   10.43.143.157   192.168.64.7   8000:30618/TCP                                                                                              10h
 metabase                LoadBalancer   10.43.159.202   192.168.64.7   3000:30884/TCP                                                                                              10h
 ```
@@ -239,7 +235,7 @@ To scale it back up. This will force the OpenMRS pod to be recreated restarting 
 
 #### Download files from the container's data folder
 
-```./scripts/download-files.sh mdlh/alpine-rsync ./data/  haiti-data-pvc```
+```./scripts/download-files.sh mdlh/alpine-rsync ./data/  data-pvc```
 This could be used to download backups and other files.
 
 ##### NOTE: Sometimes this command my fail if the pipe to the pod breaks when using ```kubectl cp``` This will fail silently and there is no way to know that the copy failed. With this helper it will fail with a non zero error code

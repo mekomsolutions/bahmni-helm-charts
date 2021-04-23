@@ -2,14 +2,14 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: {{ .Release.Name }}-mysql-storage
+  name: mysql-storage
 provisioner: kubernetes.io/no-provisioner
 reclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Release.Name }}-mysql-pv
+  name: mysql-pv
 spec:
   capacity:
     storage: {{  .Values.apps.mysql.storage.size }}
@@ -17,7 +17,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
-  storageClassName: {{ .Release.Name }}-mysql-storage
+  storageClassName: mysql-storage
   local:
     path: {{ .Values.mysqlLocalPath }}
   nodeAffinity:
@@ -32,11 +32,11 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-mysql-pvc
+  name: mysql-pvc
   labels:
-    app: {{ .Release.Name }}-mysql
+    app: mysql
 spec:
-  storageClassName: {{ .Release.Name }}-mysql-storage
+  storageClassName: mysql-storage
   accessModes:
   - ReadWriteOnce
   resources:

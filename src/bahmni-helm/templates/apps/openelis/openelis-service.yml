@@ -2,14 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-openelis
+  name: openelis
   labels:
-    app: {{ .Release.Name }}-openelis
+    app: openelis
 spec:
-  type: LoadBalancer
-  {{ if .Values.apps.openelis.service.loadBalancerIP }}loadBalancerIP: {{ .Values.apps.openelis.service.loadBalancerIP }} {{ end }}
+  type: ClusterIP
   selector:
-    app: {{ .Release.Name }}-openelis
+    app: openelis
   ports:
   - port: 8080
     targetPort: 8080

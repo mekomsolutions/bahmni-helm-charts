@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-postgres
+  name: postgres
   labels:
-    app: {{ .Release.Name }}-postgres
+    app: postgres
 spec:
   replicas: 1
-  serviceName: {{ .Release.Name }}-postgres
+  serviceName: postgres
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-postgres
+      app: postgres
   {{- if ne .Values.isAppliance true }}
   volumeClaimTemplates:
   - metadata:
-      name: {{ .Release.Name }}-postgres-database
+      name: postgres-database
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
@@ -24,17 +24,17 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-postgres
+        app: postgres
     spec:
     {{ if .Values.isAppliance }}
       volumes:
-        - name: {{ .Release.Name }}-postgres-database
+        - name: postgres-database
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-postgres-pvc
+            claimName: postgres-pvc
     {{ end }}
       priorityClassName: high-priority
       containers:
-        - name: {{ .Release.Name }}-postgres
+        - name: postgres
           image: "{{ .Values.docker_registry }}/{{ .Values.apps.postgresql.image }}"
           resources:
             requests:
@@ -61,24 +61,24 @@ spec:
                 - "-c"
                 - 'PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost --username "$POSTGRES_USER" -d $POSTGRES_DB -c "SELECT 1"'
           volumeMounts:
-            - name: {{ .Release.Name }}-postgres-database
+            - name: postgres-database
               mountPath: "/var/lib/postgresql/data"
               subPath: postgres
           env:
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_PASSWORD
       {{ if .Values.selectDbHost }}
       {{- with .Values.apps.postgresql.nodeSelector }}

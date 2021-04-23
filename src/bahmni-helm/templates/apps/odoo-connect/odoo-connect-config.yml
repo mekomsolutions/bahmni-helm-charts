@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-erp-config
+  name: erp-config
   labels:
-    app: {{ .Release.Name }}-odoo-connect
+    app: odoo-connect
 data:
   erp.properties: |
     erp.host=${ODOO_HOST}

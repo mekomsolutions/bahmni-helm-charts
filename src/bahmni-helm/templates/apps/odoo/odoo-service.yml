@@ -2,15 +2,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-odoo
+  name: odoo
   labels:
-    app: {{ .Release.Name }}-odoo
+    app: odoo
 spec:
   {{ if .Values.apps.odoo.service.loadBalancerIP }}loadBalancerIP: {{ .Values.apps.odoo.service.loadBalancerIP }} {{ end }}
   type: LoadBalancer
   selector:
-    app: {{ .Release.Name }}-odoo
+    app: odoo
   ports:
-  - port: 8069
+  - port: {{ .Values.apps.odoo.service.port }} 
     targetPort: 8069
 {{ end }}{{ end }}{{ end }}
