@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-postgres
+  name: postgres
   labels:
-    app: {{ .Release.Name }}-postgres
+    app: postgres
 spec:
   selector:
-    app: {{ .Release.Name }}-postgres
+    app: postgres
   ports:
   - protocol: TCP
     port: 5432

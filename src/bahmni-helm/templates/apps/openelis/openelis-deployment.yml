@@ -2,80 +2,79 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-openelis
+  name: openelis
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-openelis
+      app: openelis
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-openelis
+        app: openelis
     spec:
       volumes:
-        - name: {{ .Release.Name }}-openelis-props
+        - name: openelis-props
           configMap:
-            name: {{ .Release.Name }}-openelis-config
-        - name: {{ .Release.Name }}-openelis-db
+            name: openelis-config
+        - name: openelis-db-init
           configMap:
-            name: {{ .Release.Name }}-postgres-db-scripts
-        - name: {{ .Release.Name }}-log
+            name: openelis-db-init
+        - name: log
           emptyDir: {}
       initContainers:
         - name: init-db
           image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.initImage }}"
           volumeMounts:
-            - name: {{ .Release.Name }}-openelis-db
+            - name: openelis-db-init
               mountPath: "/mnt/"
           command: ['sh', '-c', "sh /mnt/create_openelis_db.sh"]
           env:
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_HOST
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_DB
             - name: POSTGRES_USER 
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_PASSWORD
-# Odoo Vars
             - name: OPENELIS_DB_NAME 
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_NAME
             - name: OPENELIS_DB_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_USER
             - name: OPENELIS_DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_PASSWORD
             - name: OPENELIS_DB_HOST
               valueFrom:
                   configMapKeyRef:
-                    name: {{ .Release.Name }}-openelis-db-config
+                    name: openelis-db-config
                     key: OPENELIS_DB_HOST
       containers:
       - name: logging
         image: "{{ .Values.docker_registry }}/busybox"
         args: [/bin/sh, -c, 'while ! tail -f /usr/local/tomcat/logs/openelis.log ; do sleep 1 ; done']
         volumeMounts:
-          - name: {{ .Release.Name }}-log
+          - name: log
             mountPath: /usr/local/tomcat/logs
       - name: openelis
         image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.image }}"
@@ -84,9 +83,9 @@ spec:
               memory: "{{  .Values.apps.openelis.resources.requests.memory }}"
               cpu: "{{ .Values.apps.openelis.resources.requests.cpu }}"
         volumeMounts:
-            - name: {{ .Release.Name }}-openelis-props
+            - name: openelis-props
               mountPath: "/etc/properties/"
-            - name: {{ .Release.Name }}-log
+            - name: log
               mountPath: /usr/local/tomcat/logs
         ports:
         - name: http
@@ -113,52 +112,52 @@ spec:
           - name: OPENELIS_DB_HOST
             valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_HOST
           - name: OPENMRS_HOST
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_HOST
           - name: OPENMRS_USER
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_USER
           - name: OPENMRS_DB_SERVER
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_DB_HOST
           - name: OPENMRS_DB_PASSWORD
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_DB_PASSWORD
           - name: OPENMRS_DB_USERNAME
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_DB_USER
           - name: OPENMRS_PASSWORD
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-openmrs-configs
+                name: openmrs-configs
                 key: OPENMRS_PASSWORD
           - name: OPENELIS_DB_USER
             valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_USER
           - name: OPENELIS_DB_PASSWORD
             valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_PASSWORD
           - name: OPENELIS_DB_NAME
             valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_NAME
           - name: ATOMFEED_PROPERTIES_FILE_PATH
             value: /etc/properties/atomfeed.properties

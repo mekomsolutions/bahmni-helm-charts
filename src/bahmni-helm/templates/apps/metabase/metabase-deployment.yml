@@ -2,70 +2,70 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-metabase
+  name: metabase
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-metabase
+      app: metabase
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-metabase
+        app: metabase
     spec:
       volumes:
-        - name: {{ .Release.Name }}-metabase-db-config
+        - name: metabase-db-config
           configMap:
-            name: {{ .Release.Name }}-metabase-db
+            name: metabase-db
       initContainers:
-        - name: {{ .Release.Name }}-init-db
+        - name: init-db
           image: "{{ .Values.docker_registry }}/{{ .Values.apps.metabase.initImage }}"
           volumeMounts:
-            - name: {{ .Release.Name }}-metabase-db-config
+            - name: metabase-db-config
               mountPath: "/mnt/"      
-          command: ['sh', '-c', "bash /mnt/create_openelis_db.sh"]
+          command: ['sh', '-c', "bash /mnt/create_metabase_db.sh"]
           env:
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_HOST
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_DB
             - name: POSTGRES_USER 
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_PASSWORD
             - name: MB_DB_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-metabase-configs
+                  name: metabase-configs
                   key: METABASE_DB_USER
             - name: MB_DB_DBNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-metabase-configs
+                  name: metabase-configs
                   key: METABASE_DB_NAME
             - name: MB_DB_PASS
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-metabase-configs
+                  name: metabase-configs
                   key: METABASE_DB_PASSWORD
             - name: MB_DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_HOST
       containers:
-      - name: {{ .Release.Name }}-metabase
+      - name: metabase
         image: "{{ .Values.docker_registry }}/{{ .Values.apps.metabase.image }}"
         resources:
             requests:
@@ -94,21 +94,21 @@ spec:
           - name: MB_DB_USER
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-metabase-configs
+                name: metabase-configs
                 key: METABASE_DB_USER
           - name: MB_DB_DBNAME
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-metabase-configs
+                name: metabase-configs
                 key: METABASE_DB_NAME
           - name: MB_DB_PASS
             valueFrom:
               configMapKeyRef:
-                name: {{ .Release.Name }}-metabase-configs
+                name: metabase-configs
                 key: METABASE_DB_PASSWORD
           - name: MB_DB_HOST
             valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_HOST
 {{ end }}{{ end }}{{ end }}

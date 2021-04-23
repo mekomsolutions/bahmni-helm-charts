@@ -1,0 +1,83 @@
+{{ if .Values.apps }}{{ if .Values.apps.openelis }} {{ if .Values.apps.openelis.enabled }} 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openelis-db-config
+  labels:
+    app: openelis
+data:
+  OPENELIS_DB_USER: {{ .Values.apps.openelis.OPENELIS_DB_USER }}
+  OPENELIS_DB_PASSWORD: {{ .Values.apps.openelis.OPENELIS_DB_PASSWORD }}
+  OPENELIS_DB_NAME: {{ .Values.apps.openelis.OPENELIS_DB_NAME }}
+  OPENELIS_DB_HOST: {{ .Values.apps.openelis.OPENELIS_DB_HOST }}
+  OPENELIS_ATOMFEED_USER: {{ .Values.apps.openelis.OPENELIS_ATOMFEED_USER }}
+  OPENELIS_ATOMFEED_PASSWORD: {{ .Values.apps.openelis.OPENELIS_ATOMFEED_PASSWORD }}
+  
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openelis-config
+  labels:
+    app: openelis
+data:
+  atomfeed.properties: |
+    #OpenMRS data specific properties
+    openmrs.auth.uri=http://openmrs/openmrs/ws/rest/v1/session
+    openmrs.patient.feed.uri=http://openmrs/openmrs/ws/atomfeed/patient/recent
+    openmrs.encounter.feed.uri=http://openmrs/openmrs/ws/atomfeed/encounter/recent
+    openmrs.lab.feed.uri=http://openmrs/openmrs/ws/atomfeed/lab/recent
+
+    openmrs.user={{ .Values.apps.openmrs.OPENMRS_USER }}
+    openmrs.password={{ .Values.apps.openmrs.OPENMRS_PASSWORD }}
+
+    #Reference data specific properties
+
+    reference.data.feed.uri=http://openmrs/reference-data/ws/feed/recent
+    openmrs.connectionTimeoutInMilliseconds=10000
+    openmrs.replyTimeoutInMilliseconds=20000
+    productType.labTest=Test
+    productType.panel=Panel
+
+    #Reference data specific properties
+
+    reference.data.feed.uri=http://openmrs/reference-data/ws/feed/recent
+    reference.data.connectionTimeoutInMilliseconds=10000
+    reference.data.replyTimeoutInMilliseconds=20000
+  hibernate.properties: |
+    hibernate.connection.url=jdbc:postgresql://postgres:5432/{{ .Values.apps.openelis.OPENELIS_DB_NAME }}
+    hibernate.connection.username={{ .Values.apps.openelis.OPENELIS_DB_USER }}
+    hibernate.connection.password={{ .Values.apps.openelis.OPENELIS_DB_PASSWORD }}
+    hibernate.default_schema=clinlims
+
+--- 
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openelis-db-init
+data:
+  create_openelis_db.sh: |
+    #!/bin/bash
+    set -e
+    export PGPASSWORD=$POSTGRES_PASSWORD
+    function create_user_and_database() {
+      local database=$1
+      local user=$2
+      local password=$3
+      echo "  Creating '$user' user and '$database' database..."
+      psql -v ON_ERROR_STOP=1 -h $POSTGRES_HOST --username "$POSTGRES_USER" $POSTGRES_DB <<-EOSQL
+          CREATE USER $user WITH UNENCRYPTED PASSWORD '$password';
+          CREATE DATABASE $database;
+          GRANT ALL PRIVILEGES ON DATABASE $user TO $database;
+    EOSQL
+    } 
+    if [ "$(PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB  -tAc "SELECT 1 FROM pg_roles WHERE rolname='$OPENELIS_DB_USER'" )" = '1' ]
+    then
+      echo "Database already initilized"
+    else
+      create_user_and_database ${OPENELIS_DB_NAME} ${OPENELIS_DB_USER} ${OPENELIS_DB_PASSWORD} && PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $OPENELIS_DB_NAME < /sqls/OpenELIS_base.sql
+    fi
+---
+
+{{ end }}{{ end }}{{ end }}

@@ -3,7 +3,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-openmrs-db-backup
+  name: openmrs-db-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -13,32 +13,32 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-openmrs-db-backup
+          - name: openmrs-db-backup
             image: {{ .Values.apps.backup_services.mysql.image }}
             env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                    name: {{ .Release.Name }}-openmrs-configs
+                    name: openmrs-configs
                     key: OPENMRS_DB_HOST
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                    name: {{ .Release.Name }}-openmrs-configs
+                    name: openmrs-configs
                     key: OPENMRS_DB_NAME
             - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openmrs-configs
+                  name: openmrs-configs
                   key: OPENMRS_DB_USER
             - name: DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openmrs-configs
+                  name: openmrs-configs
                   key: OPENMRS_DB_PASSWORD
             imagePullPolicy: IfNotPresent
             volumeMounts:
-            - name: {{ .Release.Name }}-backup-services-storage
+            - name: backup-services-storage
               mountPath: "/opt/backup"
               subPath: "openmrs"
           restartPolicy: OnFailure
@@ -47,9 +47,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
-          - name: {{ .Release.Name }}-backup-services-storage
+          - name: backup-services-storage
             persistentVolumeClaim:
-              claimName: {{ .Release.Name }}-backup-services-pvc
+              claimName: backup-services-pvc
 {{ end }}{{ end }}{{ end }}
 {{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }} 
 ---
@@ -57,7 +57,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-odoo-db-backup
+  name: odoo-db-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -67,34 +67,34 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-odoo-db-backup
+          - name: odoo-db-backup
             image: {{ .Values.apps.backup_services.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_HOST
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-odoo-configs
+                  name: odoo-configs
                   key: ODOO_DB_NAME
             - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-odoo-configs
+                  name: odoo-configs
                   key: ODOO_DB_USER
             - name: DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-odoo-configs
+                  name: odoo-configs
                   key: ODOO_DB_PASSWORD
             imagePullPolicy: IfNotPresent
 
             volumeMounts:
             - mountPath: "/opt/backup"
-              name: {{ .Release.Name }}-backup-services-storage
+              name: backup-services-storage
               subPath: "odoo"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
@@ -102,9 +102,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
-          - name: {{ .Release.Name }}-backup-services-storage
+          - name: backup-services-storage
             persistentVolumeClaim:
-              claimName: {{ .Release.Name }}-backup-services-pvc
+              claimName: backup-services-pvc
 {{ end }}{{ end }}{{ end }}
 
 {{ if .Values.apps }}{{ if .Values.apps.bahmni_filestore }} {{ if .Values.apps.bahmni_filestore.enabled }} 
@@ -113,7 +113,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-filestore-backup
+  name: filestore-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -123,7 +123,7 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-filestore-backup
+          - name: filestore-backup
             image: {{ .Values.apps.backup_services.filestore.image }}
             env:
             - name: FILESTORE_PATH
@@ -131,9 +131,9 @@ spec:
             imagePullPolicy: IfNotPresent
             volumeMounts:
             - mountPath: "/opt/backup"
-              name: {{ .Release.Name }}-backup-services-storage
+              name: backup-services-storage
               subPath: "filestore"
-            - name: {{ .Release.Name }}-data
+            - name: data
               mountPath: "/opt/data/"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
@@ -141,12 +141,12 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
-          - name: {{ .Release.Name }}-backup-services-storage
+          - name: backup-services-storage
             persistentVolumeClaim:
-              claimName: {{ .Release.Name }}-backup-services-pvc
-          - name: {{ .Release.Name }}-data
+              claimName: backup-services-pvc
+          - name: data
             persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-data-pvc
+                claimName: data-pvc
 {{ end }}{{ end }}{{ end }}
 {{ if .Values.apps }}{{ if .Values.apps.metabase }} {{ if .Values.apps.metabase.enabled }} 
 ---
@@ -154,7 +154,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-metabase-db-backup
+  name: metabase-db-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -164,34 +164,34 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-metabase-db-backup
+          - name: metabase-db-backup
             image: {{ .Values.apps.backup_services.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_HOST
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-metabase-configs
+                  name: metabase-configs
                   key: METABASE_DB_NAME
             - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-metabase-configs
+                  name: metabase-configs
                   key: METABASE_DB_USER
             - name: DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-metabase-configs
+                  name: metabase-configs
                   key: METABASE_DB_PASSWORD
             imagePullPolicy: IfNotPresent
 
             volumeMounts:
             - mountPath: "/opt/backup"
-              name: {{ .Release.Name }}-backup-services-storage
+              name: backup-services-storage
               subPath: "metabase"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
@@ -199,9 +199,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
-          - name: {{ .Release.Name }}-backup-services-storage
+          - name: backup-services-storage
             persistentVolumeClaim:
-              claimName: {{ .Release.Name }}-backup-services-pvc
+              claimName: backup-services-pvc
 {{ end }}{{ end }}{{ end }}
 {{ if .Values.apps }}{{ if .Values.apps.openelis }} {{ if .Values.apps.openelis.enabled }} 
 ---
@@ -209,7 +209,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-openelis-db-backup
+  name: openelis-db-backup
 spec:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
@@ -219,34 +219,34 @@ spec:
       template:
         spec:
           containers:
-          - name: {{ .Release.Name }}-openelis-db-backup
+          - name: openelis-db-backup
             image: {{ .Values.apps.backup_services.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-postgres-configs
+                  name: postgres-configs
                   key: POSTGRES_HOST
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_NAME
             - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_USER
             - name: DB_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Release.Name }}-openelis-db-config
+                  name: openelis-db-config
                   key: OPENELIS_DB_PASSWORD
             imagePullPolicy: IfNotPresent
 
             volumeMounts:
             - mountPath: "/opt/backup"
-              name: {{ .Release.Name }}-backup-services-storage
+              name: backup-services-storage
               subPath: "openelis"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
@@ -254,8 +254,8 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
-          - name: {{ .Release.Name }}-backup-services-storage
+          - name: backup-services-storage
             persistentVolumeClaim:
-              claimName: {{ .Release.Name }}-backup-services-pvc
+              claimName: backup-services-pvc
 {{ end }}{{ end }}{{ end }}
 {{ end }}{{ end }}{{ end }}

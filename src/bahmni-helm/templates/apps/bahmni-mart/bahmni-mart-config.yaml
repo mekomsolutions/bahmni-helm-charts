@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-mart-config
+  name: mart-config
   labels:
-    app: {{ .Release.Name }}-bahmni-mart
+    app: bahmni-mart
 data:
-  ANALYTICS_DB_HOST: {{ .Release.Name }}-postgres
+  ANALYTICS_DB_HOST: postgres
   ANALYTICS_DB_NAME: {{.Values.apps.bahmni_mart.ANALYTICS_DB_NAME }} 
   ANALYTICS_DB_USER: {{.Values.apps.bahmni_mart.ANALYTICS_DB_USER }}
   ANALYTICS_DB_PASSWORD: {{.Values.apps.bahmni_mart.ANALYTICS_DB_PASSWORD }}
@@ -15,9 +15,9 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-mart-props
+  name: mart-props
   labels:
-    app: {{ .Release.Name }}-bahmni-mart
+    app: bahmni-mart
 data:
   bahmni-mart.json: |
       {
@@ -276,4 +276,29 @@ data:
             <appender-ref ref="CONSOLE" />
         </logger>
     </configuration>
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mart-db-scripts
+data:
+  create_analytics_db.sh: |
+    #!/bin/bash
+
+    set -eu
+
+    function create_user_and_database() {
+      local database=$1
+      local user=$2
+      local password=$3
+      echo "  Creating '$user' user and '$database' database..."
+      PGPASSWORD=$POSTGRES_PASSWORD psql -v ON_ERROR_STOP=1  -h $POSTGRES_HOST --username "$POSTGRES_USER" $POSTGRES_DB <<-EOSQL
+          CREATE USER $user WITH UNENCRYPTED PASSWORD '$password';
+          CREATE DATABASE $database;
+          GRANT ALL PRIVILEGES ON DATABASE $user TO $database;
+    EOSQL
+    }
+
+    PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST --username $POSTGRES_USER $POSTGRES_DB  -tAc "SELECT 1 FROM pg_roles WHERE rolname='$ANALYTICS_DB_USER'" | grep -q 1 || create_user_and_database ${ANALYTICS_DB_NAME} ${ANALYTICS_DB_USER} ${ANALYTICS_DB_PASSWORD}
 {{ end }}{{ end }}{{ end }}

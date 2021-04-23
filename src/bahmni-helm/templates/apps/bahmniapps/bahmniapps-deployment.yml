@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-bahmniapps
+  name: bahmniapps
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-bahmniapps
+      app: bahmniapps
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-bahmniapps
+        app: bahmniapps
     spec:
       volumes:
-        - name: {{ .Release.Name }}-distro
+        - name: distro
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-distro-pvc
+            claimName: distro-pvc
       containers:
       - name: bahmniapps
         image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmniapps.image }}"
@@ -24,7 +24,7 @@ spec:
               memory: "{{  .Values.apps.bahmniapps.resources.requests.memory }}"
               cpu: "{{ .Values.apps.bahmniapps.resources.requests.cpu }}"
         volumeMounts:
-            - name: {{ .Release.Name }}-distro
+            - name: distro
               subPath: "bahmni_emr/bahmniapps"
               mountPath: "/var/www"
         ports:

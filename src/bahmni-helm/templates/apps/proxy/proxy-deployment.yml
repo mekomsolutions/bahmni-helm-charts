@@ -2,18 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-proxy
+  name: proxy
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-proxy
+      app: proxy
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-proxy
+        app: proxy
     spec:
       containers:
-      - name: {{ .Release.Name }}-proxy
+      - name: proxy
         image: "{{ .Values.docker_registry }}/{{ .Values.apps.proxy.image }}" 
         resources:
             requests:
@@ -23,15 +23,15 @@ spec:
         ports:
         - containerPort: 80
         volumeMounts:
-        - name: {{ .Release.Name }}-proxy-rules-volume
+        - name: proxy-rules-volume
           mountPath: /usr/local/apache2/conf/rules
-        - name: {{ .Release.Name }}-proxy-config-volume
+        - name: proxy-config-volume
           mountPath: /usr/local/apache2/conf/extra
       volumes:
-      - name: {{ .Release.Name }}-proxy-rules-volume
+      - name: proxy-rules-volume
         configMap:
-          name: {{ .Release.Name }}-proxy-rules
-      - name: {{ .Release.Name }}-proxy-config-volume
+          name: proxy-rules
+      - name: proxy-config-volume
         configMap:
-          name: {{ .Release.Name }}-proxy-confs
+          name: proxy-confs
 {{ end }}{{ end }}{{ end }}

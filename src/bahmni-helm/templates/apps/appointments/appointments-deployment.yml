@@ -2,18 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-appointments
+  name: appointments
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-appointments
+      app: appointments
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-appointments
+        app: appointments
     spec:
       containers:
-      - name: {{ .Release.Name }}-bahmni-config
+      - name: bahmni-config
         image:  "{{ .Values.docker_registry }}/{{ .Values.apps.appointments.image }}"
         resources:
             requests:

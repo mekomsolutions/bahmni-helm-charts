@@ -2,14 +2,14 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: {{ .Release.Name }}-backup-services-storage
+  name: backup-services-storage
 provisioner: kubernetes.io/no-provisioner
 reclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Release.Name }}-backup-services-pv
+  name: backup-services-pv
 spec:
   capacity:
     storage: {{  .Values.apps.backup_services.storage.size }}
@@ -17,7 +17,7 @@ spec:
   accessModes:
   - ReadWriteMany
   persistentVolumeReclaimPolicy: Delete
-  storageClassName: {{ .Release.Name }}-backup-services-storage
+  storageClassName: backup-services-storage
   local:
     path: {{ .Values.apps.backup_services.localPath }}
   nodeAffinity:
@@ -32,11 +32,11 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-backup-services-pvc
+  name: backup-services-pvc
   labels:
-    app: {{ .Release.Name }}-backup-services
+    app: backup-services
 spec:
-  storageClassName: {{ .Release.Name }}-backup-services-storage
+  storageClassName: backup-services-storage
   accessModes:
   - ReadWriteMany
   resources:

@@ -3,14 +3,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-odoo-configs
+  name: odoo-configs
   labels:
-    app: {{ .Release.Name }}-odoo
+    app: odoo
 data:
   ODOO_DB_USER: odoo
   ODOO_DB_PASSWORD: password
   ODOO_DB_NAME: odoo
-  ODOO_HOST: {{ .Release.Name }}-odoo 
+  ODOO_HOST: odoo 
   ODOO_USER: admin
   ODOO_PASSWORD: admin
   ODOO_MASTER_PASSWORD: password
@@ -38,7 +38,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-odoo-db
+  name: odoo-db
 data:
   create_odoo_db.sh: |
     #!/bin/bash

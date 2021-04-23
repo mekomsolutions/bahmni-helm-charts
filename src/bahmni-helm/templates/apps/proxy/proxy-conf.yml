@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-proxy-confs
+  name: proxy-confs
 data:
   000-80.conf: |
     <VirtualHost *:80>

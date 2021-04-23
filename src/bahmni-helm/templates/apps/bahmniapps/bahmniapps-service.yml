@@ -2,44 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-bahmniapps
+  name: bahmniapps
   labels:
-    app: {{ .Release.Name }}-bahmniapps
+    app: bahmniapps
 spec:
   selector:
-    app: {{ .Release.Name }}-bahmniapps
+    app: bahmniapps
   ports:
   - protocol: TCP
     port: 80
     targetPort: 8900
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ .Release.Name }}-bahmniapps
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /bahmniapps
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Release.Name }}-bahmniapps
-            port:
-              number: 80
-      - path: /bahmni
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Release.Name }}-bahmniapps
-            port:
-              number: 80
-      - path: /cgi-bin/systemdate
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Release.Name }}-bahmniapps
-            port:
-              number: 80
 {{ end }}{{ end }}{{ end }}
