@@ -1,4 +1,4 @@
-{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -106,7 +106,7 @@ spec:
             path: /openmrs
             port: openmrs-port
           failureThreshold: 180
-          periodSeconds: 10
+          periodSeconds: 20
         livenessProbe:
           httpGet:
             path: /openmrs
