@@ -31,7 +31,7 @@ spec:
           volumeMounts:
             - name: odoo-db
               mountPath: "/mnt/"
-          command: ['sh', '-c', "bash /mnt/create_odoo_db.sh"]
+          command: ['sh', '-c', "bash /mnt/create_odoo_role.sh"]
           env:
             - name: POSTGRES_HOST
               valueFrom:
