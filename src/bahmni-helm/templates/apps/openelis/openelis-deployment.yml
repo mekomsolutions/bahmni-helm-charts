@@ -71,7 +71,7 @@ spec:
                     key: OPENELIS_DB_HOST
       containers:
       - name: logging
-        image: "{{ .Values.docker_registry }}/busybox"
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.loggingImage }}"
         args: [/bin/sh, -c, 'while ! tail -f /usr/local/tomcat/logs/openelis.log ; do sleep 1 ; done']
         volumeMounts:
           - name: log

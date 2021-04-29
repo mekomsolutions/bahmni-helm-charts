@@ -160,6 +160,7 @@ apps:
   openelis:
     image: enyachoke/openelis
     initImage: enyachoke/openelis-init
+    loggingImage: busybox:latest
     enabled: false
     OPENELIS_DB_USER: clinlims
     OPENELIS_DB_PASSWORD: clinlims
