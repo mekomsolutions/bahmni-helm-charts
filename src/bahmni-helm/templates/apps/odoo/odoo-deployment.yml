@@ -1,4 +1,4 @@
-{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,7 +43,7 @@ spec:
                 configMapKeyRef:
                   name: postgres-configs
                   key: POSTGRES_DB
-            - name: POSTGRES_USER 
+            - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
                   name: postgres-configs
@@ -53,8 +53,8 @@ spec:
                 configMapKeyRef:
                   name: postgres-configs
                   key: POSTGRES_PASSWORD
-# Odoo Vars
-            - name: ODOO_DB_NAME 
+            # Odoo Vars
+            - name: ODOO_DB_NAME
               valueFrom:
                 configMapKeyRef:
                   name: odoo-configs

@@ -14,7 +14,7 @@ spec:
         spec:
           containers:
           - name: openmrs-db-backup
-            image: {{ .Values.apps.backup_services.mysql.image }}
+            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.mysql.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -51,7 +51,7 @@ spec:
             persistentVolumeClaim:
               claimName: backup-services-pvc
 {{ end }}{{ end }}{{ end }}
-{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }}
 ---
 
 apiVersion: batch/v1beta1
@@ -124,7 +124,7 @@ spec:
         spec:
           containers:
           - name: filestore-backup
-            image: {{ .Values.apps.backup_services.filestore.image }}
+            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.filestore.image }}
             env:
             - name: FILESTORE_PATH
               value: "/opt/data/"
@@ -165,7 +165,7 @@ spec:
         spec:
           containers:
           - name: metabase-db-backup
-            image: {{ .Values.apps.backup_services.postgres.image }}
+            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -203,7 +203,7 @@ spec:
             persistentVolumeClaim:
               claimName: backup-services-pvc
 {{ end }}{{ end }}{{ end }}
-{{ if .Values.apps }}{{ if .Values.apps.openelis }} {{ if .Values.apps.openelis.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.openelis }} {{ if .Values.apps.openelis.enabled }}
 ---
 
 apiVersion: batch/v1beta1
