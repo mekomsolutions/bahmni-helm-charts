@@ -27,13 +27,14 @@ data:
     [options]
     addons_path = /opt/bahmni-addons,/mnt/extra-addons
     data_dir = /var/lib/odoo
-    initializer_data_files_paths = /opt/odoo-config
+    initializer_data_files_paths = /opt/odoo-config,/opt/openmrs-config
     proxy_mode = True
     test_enable = False
     test_file = False
     without_demo = all
-    workers = 4
+    workers = 0
     admin_passwd = ${ODOO_MASTER_PASSWORD}
+    initializer_config_file_path = /opt/odoo-config/initializer_config.json
 ---
 apiVersion: v1
 kind: ConfigMap
