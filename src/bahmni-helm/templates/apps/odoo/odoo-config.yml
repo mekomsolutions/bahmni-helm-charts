@@ -17,6 +17,7 @@ data:
   ODOO_PUBLIC_PORT: "8069"
   ODOO_EXTRA_ADDONS: odoo_addons
   ODOO_CONFIG_PATH: odoo_config
+  ODOO_PORT: "80"
 ---
 apiVersion: v1
 kind: ConfigMap

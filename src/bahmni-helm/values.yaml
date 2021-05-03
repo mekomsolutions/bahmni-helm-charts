@@ -132,6 +132,7 @@ apps:
     image: mekomsolutions/odoo
     enabled: false
     ODOO_DB_USER: odoo
+    ODOO_PORT: 80
     ODOO_DB_PASSWORD: password
     ODOO_DB_NAME: odoo
     ODOO_HOST: odoo 
@@ -159,6 +160,7 @@ apps:
         memory: "100Mi"
   openelis:
     image: enyachoke/openelis
+    loggingImage: busybox
     initImage: enyachoke/openelis-init
     loggingImage: busybox:latest
     enabled: false

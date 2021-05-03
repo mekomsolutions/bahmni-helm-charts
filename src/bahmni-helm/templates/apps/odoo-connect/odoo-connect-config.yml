@@ -73,7 +73,7 @@ data:
 
     chunking.strategy=number
 
-    openerp.port=8069
+    openerp.port=${ODOO_PORT}
     openerp.host=${ODOO_HOST}
     openerp.database=${ODOO_DB}
     openerp.user=${ODOO_USERNAME}

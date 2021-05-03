@@ -53,6 +53,11 @@ spec:
               configMapKeyRef:
                 name: odoo-configs
                 key: ODOO_HOST
+          - name: ODOO_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_PORT
           - name: ODOO_USERNAME
             valueFrom:
               configMapKeyRef:
