@@ -69,6 +69,7 @@ spec:
                   configMapKeyRef:
                     name: openelis-db-config
                     key: OPENELIS_DB_HOST
+      priorityClassName: high-priority
       containers:
       - name: logging
         image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.loggingImage }}"
