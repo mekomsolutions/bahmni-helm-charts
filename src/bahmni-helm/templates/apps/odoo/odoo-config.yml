@@ -1,4 +1,4 @@
-{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.odoo }} {{ if .Values.apps.odoo.enabled }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -10,7 +10,7 @@ data:
   ODOO_DB_USER: odoo
   ODOO_DB_PASSWORD: password
   ODOO_DB_NAME: odoo
-  ODOO_HOST: odoo 
+  ODOO_HOST: odoo
   ODOO_USER: admin
   ODOO_PASSWORD: admin
   ODOO_MASTER_PASSWORD: password

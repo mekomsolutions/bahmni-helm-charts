@@ -48,12 +48,13 @@ apps:
     nodeSelector:
           role: database
     enabled: true
-    mysql:
-      image: mekomsolutions/mysql_backup
-    postgres:
-      image: mekomsolutions/postgres_backup
-    filestore:
-      image: mekomsolutions/filestore_backup
+    apps:
+      mysql:
+        image: mekomsolutions/mysql_backup
+      postgres:
+        image: mekomsolutions/postgres_backup
+      filestore:
+        image: mekomsolutions/filestore_backup
 
   bahmni_mart:
     initImage: postgres:alpine
@@ -135,7 +136,7 @@ apps:
     ODOO_PORT: 80
     ODOO_DB_PASSWORD: password
     ODOO_DB_NAME: odoo
-    ODOO_HOST: odoo 
+    ODOO_HOST: odoo
     ODOO_USER: admin
     ODOO_PASSWORD: admin
     ODOO_MASTER_PASSWORD: password
@@ -160,7 +161,6 @@ apps:
         memory: "100Mi"
   openelis:
     image: enyachoke/openelis
-    loggingImage: busybox
     initImage: enyachoke/openelis-init
     loggingImage: busybox:latest
     enabled: false

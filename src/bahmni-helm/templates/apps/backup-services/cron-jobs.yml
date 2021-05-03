@@ -1,5 +1,5 @@
 {{ if .Values.apps }}{{ if .Values.apps.backup_services }} {{ if .Values.apps.backup_services.enabled }}
-{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -14,7 +14,7 @@ spec:
         spec:
           containers:
           - name: openmrs-db-backup
-            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.mysql.image }}
+            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.mysql.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -43,7 +43,7 @@ spec:
               subPath: "openmrs"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
-          nodeSelector: 
+          nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
@@ -68,7 +68,7 @@ spec:
         spec:
           containers:
           - name: odoo-db-backup
-            image: {{ .Values.apps.backup_services.postgres.image }}
+            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -98,7 +98,7 @@ spec:
               subPath: "odoo"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
-          nodeSelector: 
+          nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
@@ -107,7 +107,7 @@ spec:
               claimName: backup-services-pvc
 {{ end }}{{ end }}{{ end }}
 
-{{ if .Values.apps }}{{ if .Values.apps.bahmni_filestore }} {{ if .Values.apps.bahmni_filestore.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.bahmni_filestore }} {{ if .Values.apps.bahmni_filestore.enabled }}
 ---
 
 apiVersion: batch/v1beta1
@@ -124,7 +124,7 @@ spec:
         spec:
           containers:
           - name: filestore-backup
-            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.filestore.image }}
+            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.filestore.image }}
             env:
             - name: FILESTORE_PATH
               value: "/opt/data/"
@@ -137,7 +137,7 @@ spec:
               mountPath: "/opt/data/"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
-          nodeSelector: 
+          nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
@@ -148,7 +148,7 @@ spec:
             persistentVolumeClaim:
                 claimName: data-pvc
 {{ end }}{{ end }}{{ end }}
-{{ if .Values.apps }}{{ if .Values.apps.metabase }} {{ if .Values.apps.metabase.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.metabase }} {{ if .Values.apps.metabase.enabled }}
 ---
 
 apiVersion: batch/v1beta1
@@ -165,7 +165,7 @@ spec:
         spec:
           containers:
           - name: metabase-db-backup
-            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.postgres.image }}
+            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -195,7 +195,7 @@ spec:
               subPath: "metabase"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
-          nodeSelector: 
+          nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
@@ -220,7 +220,7 @@ spec:
         spec:
           containers:
           - name: openelis-db-backup
-            image: {{ .Values.apps.backup_services.postgres.image }}
+            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -250,7 +250,7 @@ spec:
               subPath: "openelis"
           restartPolicy: OnFailure
           {{- with .Values.apps.backup_services.nodeSelector }}
-          nodeSelector: 
+          nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{end}}
           volumes:
