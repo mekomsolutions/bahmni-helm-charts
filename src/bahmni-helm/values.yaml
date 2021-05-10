@@ -160,7 +160,7 @@ apps:
         cpu: "0.5"
         memory: "100Mi"
   openelis:
-    image: enyachoke/openelis
+    image: mekomsolutions/openelis
     initImage: enyachoke/openelis-init
     loggingImage: busybox:latest
     enabled: false
