@@ -16,53 +16,12 @@ spec:
         - name: openmrs-props
           configMap:
             name: openmrs-props
-        - name: openmrs-db
-          configMap:
-            name: openmrs-db-script
         - name: distro
           persistentVolumeClaim:
             claimName: distro-pvc
         - name: data
           persistentVolumeClaim:
             claimName: data-pvc
-      initContainers:
-        - name: init-db
-          image: "{{ .Values.docker_registry }}/{{ .Values.apps.openmrs.initImage }}"
-          volumeMounts:
-            - name: openmrs-db
-              mountPath: "/mnt/"
-          command: ['sh', '-c', "bash /mnt/create_openmrs_db.sh"]
-          env:
-            - name: OPENMRS_DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: openmrs-configs
-                  key: OPENMRS_DB_HOST
-            - name: MYSQL_ROOT_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: mysql-configs
-                  key: MYSQL_ROOT_USER
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: mysql-configs
-                  key: MYSQL_ROOT_PASSWORD
-            - name: OPENMRS_DB_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: openmrs-configs
-                  key: OPENMRS_DB_NAME
-            - name: OPENMRS_DB_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: openmrs-configs
-                  key: OPENMRS_DB_USER
-            - name: OPENMRS_DB_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: openmrs-configs
-                  key: OPENMRS_DB_PASSWORD
       priorityClassName: high-priority
       containers:
       - name: openmrs
