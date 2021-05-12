@@ -7,23 +7,23 @@ databaseHostRole: database
 docker_registry: docker.io
 apps:
   updatebox:
-    image: mdlh/alpine-rsync
+    image: mdlh/alpine-rsync:3.11-3.1-1
   appointments:
     enabled: false
-    image: mekomsolutions/appointments
+    image: mekomsolutions/appointments:145a9e3
     resources:
       requests:
         cpu: "0.5"
         memory: "100Mi"
   bahmni_config:
-    image: nginx:alpine
+    image: nginx:1.19.10-alpine
     enabled: false
     resources:
       requests:
         cpu: "0.5"
         memory: "100Mi"
   bahmni_filestore:
-    image: nginx:alpine
+    image: nginx:1.19.10-alpine
     enabled: false
     resources:
       requests:
@@ -50,15 +50,15 @@ apps:
     enabled: true
     apps:
       mysql:
-        image: mekomsolutions/mysql_backup
+        image: mekomsolutions/mysql_backup:145a9e3
       postgres:
-        image: mekomsolutions/postgres_backup
+        image: mekomsolutions/postgres_backup:145a9e3
       filestore:
-        image: mekomsolutions/filestore_backup
+        image: mekomsolutions/filestore_backup:145a9e3
 
   bahmni_mart:
-    initImage: postgres:alpine
-    image: mekomsolutions/bahmni-mart
+    initImage: postgres:9.6-alpine
+    image: mekomsolutions/bahmni-mart:145a9e3
     enabled: false
     ANALYTICS_DB_HOST: postgres
     ANALYTICS_DB_NAME: analytics
@@ -70,29 +70,29 @@ apps:
         cpu: "0.5"
         memory: "256Mi"
   bahmni_reports:
-    image: mekomsolutions/bahmni-reports
+    image: mekomsolutions/bahmni-reports:145a9e3
     enabled: false
     resources:
       requests:
         cpu: "0.5"
         memory: "100Mi"
   bahmniapps:
-    image: mekomsolutions/bahmniapps
+    image: mekomsolutions/bahmniapps:145a9e3
     enabled: false
     resources:
       requests:
         cpu: "0.5"
         memory: "100Mi"
   implementer_interface:
-    image: mekomsolutions/implementer-interface
+    image: mekomsolutions/implementer-interface:145a9e3
     enabled: false
     resources:
       requests:
         cpu: "0.5"
         memory: "100Mi"
   metabase:
-    initImage: postgres:alpine
-    image: mekomsolutions/metabase
+    initImage: postgres:9.6-alpine
+    image: mekomsolutions/metabase:145a9e3
     enabled: false
     METABASE_DB_NAME: metabase
     METABASE_DB_PASSWORD: metabase
@@ -129,8 +129,8 @@ apps:
               values:
               - database
   odoo:
-    initImage: postgres:alpine
-    image: mekomsolutions/odoo
+    initImage: postgres:9.6-alpine
+    image: mekomsolutions/odoo:145a9e3
     enabled: false
     ODOO_DB_USER: odoo
     ODOO_PORT: 80
@@ -151,7 +151,7 @@ apps:
       loadBalancerIP: ''
       port: 80
   odoo_connect:
-    image: mekomsolutions/odoo-connect
+    image: mekomsolutions/odoo-connect:145a9e3
     enabled: false
     OPENELIS_USER: admin
     OPENELIS_PASSWORD: adminADMIN!
@@ -160,9 +160,9 @@ apps:
         cpu: "0.5"
         memory: "100Mi"
   openelis:
-    image: mekomsolutions/openelis
-    initImage: enyachoke/openelis-init
-    loggingImage: busybox:latest
+    image: mekomsolutions/openelis:145a9e3
+    initImage: enyachoke/openelis-init:5b1f024
+    loggingImage: busybox:1.33.1
     enabled: false
     OPENELIS_DB_USER: clinlims
     OPENELIS_DB_PASSWORD: clinlims
@@ -178,7 +178,7 @@ apps:
       loadBalancerIP: ''
   openmrs:
     initImage: mariadb:10.3
-    image: mekomsolutions/openmrs
+    image: mekomsolutions/openmrs:145a9e3
     enabled: false
     OPENMRS_DB_NAME: openmrs
     OPENMRS_USER: superman
@@ -224,7 +224,7 @@ apps:
               values:
               - database
   proxy:
-    image: enyachoke/proxy:latest
+    image: enyachoke/proxy:5b1f024
     enabled: true
     resources:
       requests:
