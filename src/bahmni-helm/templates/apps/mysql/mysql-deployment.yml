@@ -32,13 +32,13 @@ spec:
           persistentVolumeClaim:
             claimName: mysql-pvc
     {{ end }}
-      securityContext:
-        runAsUser: 999
+        - name: mysql-props
+          configMap:
+            name: mysql-props
       priorityClassName: high-priority
       containers:
         - name: mysql
           image: "{{ .Values.docker_registry }}/{{ .Values.apps.mysql.image }}"
-          command: [ "mysqld", "--character-set-server=utf8", "--collation-server=utf8_general_ci" ]
           resources:
             requests:
               memory: "{{  .Values.apps.mysql.resources.requests.memory }}"
@@ -64,8 +64,10 @@ spec:
                 - "-c"
                 - 'mysqladmin -uroot -p${MYSQL_ROOT_PASSWORD} ping'
           volumeMounts:
-            - mountPath: "/var/lib/mysql"
-              name: mysql-database
+            - name: mysql-database
+              mountPath: "/var/lib/mysql"
+            - name: mysql-props
+              mountPath: /etc/mysql/conf.d/
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:

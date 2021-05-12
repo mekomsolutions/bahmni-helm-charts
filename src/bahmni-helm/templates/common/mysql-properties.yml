@@ -1,4 +1,4 @@
-{{ if .Values.apps }}{{ if .Values.apps.mysql }} {{ if .Values.apps.mysql.enabled }} 
+{{ if .Values.apps }}{{ if .Values.apps.mysql }} {{ if .Values.apps.mysql.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,4 +8,23 @@ metadata:
 data:
   MYSQL_ROOT_USER: root
   MYSQL_ROOT_PASSWORD: password
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-props
+  labels:
+    app: mysql
+data:
+  my.cnf: |
+    [client]
+    default-character-set=utf8
+
+    [mysql]
+    default-character-set=utf8
+
+    [mysqld]
+    collation-server = utf8_general_ci
+    character-set-server = utf8
+
 {{ end }}{{ end }}{{ end }}
