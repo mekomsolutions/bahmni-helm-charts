@@ -50,11 +50,11 @@ apps:
     enabled: true
     apps:
       mysql:
-        image: mekomsolutions/mysql_backup:9ab7a24
+        image: mekomsolutions/mysql_backup:145a9e3
       postgres:
-        image: mekomsolutions/postgres_backup:9ab7a24
+        image: mekomsolutions/postgres_backup:145a9e3
       filestore:
-        image: mekomsolutions/filestore_backup:9ab7a24
+        image: mekomsolutions/filestore_backup:145a9e3
 
   bahmni_mart:
     initImage: postgres:9.6-alpine

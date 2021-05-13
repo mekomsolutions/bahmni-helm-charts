@@ -1,4 +1,4 @@
-{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }}
+{{ if .Values.apps }}{{ if .Values.apps.openmrs }} {{ if .Values.apps.openmrs.enabled }} 
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -46,5 +46,27 @@ data:
     openelis.user={{ .Values.apps.openelis.OPENELIS_ATOMFEED_USER }}
     openelis.password={{ .Values.apps.openelis.OPENELIS_ATOMFEED_PASSWORD }}
     patient.feed.uri=http://openelis:8080/openelis/ws/feed/patient/recent
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openmrs-db-script
+data:
+  create_openmrs_db.sh: |
+    #!/bin/bash
+    set -eu
 
+    echo "Checking OpenMRS database"
+    # RESULT=$(mysql -h $OPENMRS_DB_HOST --user=$MYSQL_ROOT_USER --password=$MYSQL_ROOT_PASSWORD -qfsBe "SHOW DATABASES;" | grep -F -- "$PWD")
+    RESULT=`mysql -h $OPENMRS_DB_HOST --user=$MYSQL_ROOT_USER --password=$MYSQL_ROOT_PASSWORD --skip-column-names -e "SHOW DATABASES LIKE '${OPENMRS_DB_NAME}'"  | wc -l `
+    if [ "$RESULT" -eq 0 ]; then
+      echo "Creating '$OPENMRS_DB_USER' database..."
+      mysql -h ${OPENMRS_DB_HOST} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE ${OPENMRS_DB_NAME} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+      mysql -h ${OPENMRS_DB_HOST} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD} -e "CREATE USER '${OPENMRS_DB_USER}'@'%' IDENTIFIED BY '${OPENMRS_DB_PASSWORD}';"
+      mysql -h ${OPENMRS_DB_HOST} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON ${OPENMRS_DB_NAME}.* TO '${OPENMRS_DB_USER}'@'%';"
+      mysql -h ${OPENMRS_DB_HOST} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD} -e "FLUSH PRIVILEGES;"
+      echo "User '${OPENMRS_DB_USER}' created successfully."
+    else
+      echo "Database already exists."
+    fi
 {{ end }}{{ end }}{{ end }}
