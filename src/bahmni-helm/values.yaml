@@ -178,7 +178,7 @@ apps:
       loadBalancerIP: ''
   openmrs:
     initImage: mariadb:10.3
-    image: mekomsolutions/openmrs:0be5f04
+    image: mekomsolutions/openmrs:3fc619f
     enabled: false
     OPENMRS_DB_NAME: openmrs
     OPENMRS_USER: superman
