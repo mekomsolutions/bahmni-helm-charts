@@ -57,7 +57,7 @@ data:
     set -eu
 
     echo "Checking OpenMRS database"
-    RESULT=`mysql -h $OPENMRS_DB_HOST --user=$MYSQL_ROOT_USER --password=$MYSQL_ROOT_PASSWORD -sse "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '$OPENMRS_DB_USER')")"  | wc -l `
+    RESULT=`mysql -h $OPENMRS_DB_HOST --user=$MYSQL_ROOT_USER --password=$MYSQL_ROOT_PASSWORD -sse "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '$OPENMRS_DB_USER')"`
     if [ "$RESULT" = 1 ]; then
       echo "Database User already exists."
     else
