@@ -24,7 +24,7 @@ spec:
       initContainers:
         - name: wait-for-openmrs
           image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.loggingImage }}"
-          command: ['sh', '-c', "until wget --spider openmrs.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local:8080; do echo 'Waiting for OpenMRS to be started...''; sleep 2; done"]
+          command: ['sh', '-c', "until wget --spider openmrs.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local:8080; do echo 'Waiting for OpenMRS to be started...'; sleep 2; done"]
         - name: init-db
           image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.initImage }}"
           volumeMounts:
