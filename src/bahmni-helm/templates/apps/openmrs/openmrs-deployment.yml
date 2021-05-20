@@ -41,7 +41,7 @@ spec:
           volumeMounts:
             - name: openmrs-db
               mountPath: "/mnt/"
-          command: ['sh', '-c', "bash /mnt/create_openmrs_db.sh"]
+          command: ['sh', '-c', "bash /mnt/create_openmrs_role.sh"]
           env:
             - name: OPENMRS_DB_HOST
               valueFrom:
