@@ -115,7 +115,7 @@ spec:
           httpGet:
             path: /openmrs
             port: openmrs-port
-          failureThreshold: 180
+          failureThreshold: 360
           periodSeconds: 20
         livenessProbe:
           httpGet:
@@ -156,5 +156,5 @@ spec:
               configMapKeyRef:
                 name: openmrs-configs
                 key: OPENMRS_DB_PASSWORD
-      
+
 {{ end }}{{ end }}{{ end }}
