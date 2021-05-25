@@ -12,6 +12,16 @@ spec:
       labels:
         app: openelis
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: "node-role.kubernetes.io/master"
+                operator: NotIn
+                values:
+                - "true"
       volumes:
         - name: openelis-props
           configMap:
