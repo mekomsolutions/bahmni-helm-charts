@@ -151,7 +151,7 @@ apps:
       loadBalancerIP: ''
       port: 80
   odoo_connect:
-    image: mekomsolutions/odoo-connect:145a9e3
+    image: mekomsolutions/odoo-connect:f7ad7ef
     enabled: false
     OPENELIS_USER: admin
     OPENELIS_PASSWORD: adminADMIN!
