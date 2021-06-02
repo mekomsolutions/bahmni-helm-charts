@@ -95,15 +95,18 @@ spec:
             - name: distro
               subPath: "odoo_addons/"
               mountPath: "/mnt/extra-addons"
+            - name: distro
+              subPath: "openmrs_config/"
+              mountPath: "/opt/openmrs-config"
             - name: data
               subPath: "odoo/filestore"
               mountPath: "/var/lib/odoo/filestore"
             - name: data
-              subPath: "odoo/config_checksum"
+              subPath: "odoo/odoo-config_checksum"
               mountPath: "/opt/odoo-config_checksum"
-            - name: distro
-              subPath: "openmrs_config/"
-              mountPath: "/opt/openmrs-config"
+            - name: data
+              subPath: "odoo/openmrs-config_checksum"
+              mountPath: "/opt/openmrs-config_checksum"
         ports:
         - name: http
           containerPort: 8069
