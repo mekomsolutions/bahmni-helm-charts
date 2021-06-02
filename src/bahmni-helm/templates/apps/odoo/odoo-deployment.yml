@@ -100,7 +100,7 @@ spec:
               mountPath: "/opt/openmrs-config"
             - name: data
               subPath: "odoo/filestore"
-              mountPath: "/var/lib/odoo/filestore"  
+              mountPath: "/var/lib/odoo/filestore"
             - name: data
               subPath: "odoo/odoo-config_checksum"
               mountPath: "/opt/odoo-config_checksum"
