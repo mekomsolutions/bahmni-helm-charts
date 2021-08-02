@@ -156,5 +156,7 @@ spec:
               configMapKeyRef:
                 name: openmrs-configs
                 key: OPENMRS_DB_PASSWORD
+          - name: TZ
+            value: {{ .Values.apps.openmrs.timezone }}
 
 {{ end }}{{ end }}{{ end }}

@@ -180,6 +180,7 @@ apps:
     initImage: mariadb:10.3
     image: mekomsolutions/openmrs:b676d7d
     enabled: false
+    timezone: "UTC"
     OPENMRS_DB_NAME: openmrs
     OPENMRS_USER: superman
     OPENMRS_PASSWORD: Admin123
