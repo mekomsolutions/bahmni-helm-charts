@@ -10,7 +10,7 @@
 
 You will need a working kubernetes cluster to use this project.
 
-### Deploying a K3s  cluster using multipass
+### Deploying a K3s cluster using multipass
 
 #### Setup local k3s node
 Install [Multipass](https://multipass.run/docs)

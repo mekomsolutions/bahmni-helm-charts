@@ -1,0 +1,218 @@
+{{ if .Values.apps }}{{ if .Values.apps.eip_client }} {{ if .Values.apps.eip_client.enabled }} 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eip-client
+spec:
+  selector:
+    matchLabels:
+      app: eip-client
+  template:
+    metadata:
+      labels:
+        app: eip-client
+    spec:
+      volumes:
+        - name: distro
+          persistentVolumeClaim:
+            claimName: distro-pvc
+        - name: eip-db
+          configMap:
+            name: eip-db
+      initContainers:
+        - name: init-db
+          image: "{{ .Values.docker_registry }}/{{ .Values.apps.eip_client.initImage }}"
+          volumeMounts:
+            - name: eip-db
+              mountPath: "/mnt/"
+          command: ['sh', '-c', "bash /mnt/create_eip_mgt_db.sh"]
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configs
+                  key: MYSQL_ROOT_PASSWORD
+
+            - name: EIP_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: eip-configs
+                  key: EIP_DB_NAME
+
+            - name: EIP_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: eip-configs
+                  key: EIP_DB_USER
+
+            - name: EIP_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: eip-configs
+                  key: EIP_DB_PASSWORD
+
+      containers:
+      - name: eip-client
+        image: "{{ .Values.docker_registry }}/{{ .Values.apps.eip_client.image }}"
+        resources:
+            requests:
+              memory: "100Mi"
+              cpu: "0.5"
+        env:
+          - name: MYSQL_DATABASE
+            valueFrom:
+                configMapKeyRef:
+                  name: openmrs-configs
+                  key: OPENMRS_DB_NAME
+
+          - name: DB_HOST
+            value: "mysql"
+
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_NAME
+
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_USER
+
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_PASSWORD
+
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-configs
+                key: MYSQL_ROOT_PASSWORD
+
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_HOST
+
+          - name: OPENMRS_URL
+            value: "http://openmrs"
+
+          - name: ODOO_URL
+            value: "http://odoo"
+          
+          - name: ODOO_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_DB_NAME
+          
+          - name: ODOO_USER
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_USER
+
+          - name: ODOO_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ODOO_PASSWORD
+          
+          - name: OPENMRS_DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_HOST
+
+          - name: OPENMRS_DB_PORT
+            value: "3306"
+
+          - name: OPENMRS_DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_NAME
+
+          - name: OPENMRS_DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_USER
+
+          - name: OPENMRS_DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_DB_PASSWORD
+
+          - name: OPENMRS_USER
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_USER
+          - name: OPENMRS_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: openmrs-configs
+                key: OPENMRS_PASSWORD
+
+          - name: MYSQL_ADMIN_USER
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-configs
+                key: MYSQL_ROOT_USER
+
+          - name: MYSQL_ADMIN_USER_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-configs
+                key: MYSQL_ROOT_PASSWORD
+
+          - name: SPRING_MNGT_USER
+            valueFrom:
+              configMapKeyRef:
+                name: eip-configs
+                key: EIP_SPRING_USER
+
+          - name: SPRING_MNGT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: eip-configs
+                key: EIP_SPRING_PASSWORD
+
+          - name: EIP_DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: eip-configs
+                key: EIP_DB_NAME
+          
+          - name: EIP_DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: eip-configs
+                key: EIP_DB_USER
+
+          - name: EIP_DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: eip-configs
+                key: EIP_DB_PASSWORD
+
+          - name: EIP_DB_HOST
+            value: "mysql"
+
+          - name: EIP_DB_PORT
+            value: "3306"
+
+        volumeMounts:
+            - name: distro
+              subPath: "eip-client/config"
+              mountPath: "/config"
+            - name: distro
+              subPath: "eip-client/routes"
+              mountPath: "/routes"
+{{ end }}{{ end }}{{ end }}
