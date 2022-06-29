@@ -1,0 +1,43 @@
+{{ if .Values.apps }}{{ if .Values.apps.eip_client }} {{ if .Values.apps.eip_client.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eip-configs
+  labels:
+    app: eip-client
+data:
+  EIP_SPRING_USER: name
+  EIP_SPRING_PASSWORD: password
+  EIP_DB_NAME: openmrs_eip_mngt
+  EIP_DB_PASSWORD: password
+  EIP_DB_USER: eip_user
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eip-db
+data:
+  create_eip_mgt_db.sh: |
+    #!/bin/bash
+
+    set -eu
+
+    function create_user_and_database() {
+    mysql -h mysql --password=$MYSQL_ROOT_PASSWORD --user=root <<MYSQL_SCRIPT
+        CREATE DATABASE IF NOT EXISTS $1;
+        CREATE USER '$2'@'localhost' IDENTIFIED BY '$3';
+        CREATE USER '$2'@'%' IDENTIFIED BY '$3';
+        GRANT ALL PRIVILEGES ON $1.* TO '$2'@'localhost';
+        GRANT ALL PRIVILEGES ON $1.* TO '$2'@'%';
+        FLUSH PRIVILEGES;
+    MYSQL_SCRIPT
+    }
+
+    RESULT=`mysql -h mysql --user=root --password=${MYSQL_ROOT_PASSWORD} --skip-column-names -e "SHOW DATABASES LIKE '${EIP_DB_NAME}'"`   
+    if [ "$RESULT" == "$EIP_DB_NAME" ]; then
+        echo "database already exists: $EIP_DB_NAME"
+    else
+        echo "creating user and database $EIP_DB_NAME"
+        create_user_and_database ${EIP_DB_NAME} ${EIP_DB_USER} ${EIP_DB_PASSWORD}
+    fi
+{{ end }}{{ end }}{{ end }}

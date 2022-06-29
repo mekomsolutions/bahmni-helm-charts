@@ -159,4 +159,19 @@ spec:
               configMapKeyRef:
                 name: odoo-configs
                 key: ODOO_MASTER_PASSWORD
+          - name: INITIALIZER_DATA_FILES_PATH
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: INITIALIZER_DATA_FILES_PATH
+          - name: INITIALIZER_CONFIG_FILE_PATH
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: INITIALIZER_CONFIG_FILE_PATH
+          - name: ADDONS
+            valueFrom:
+              configMapKeyRef:
+                name: odoo-configs
+                key: ADDONS
 {{ end }}{{ end }}{{ end }}

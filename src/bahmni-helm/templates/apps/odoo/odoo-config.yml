@@ -18,6 +18,9 @@ data:
   ODOO_EXTRA_ADDONS: odoo_addons
   ODOO_CONFIG_PATH: odoo_config
   ODOO_PORT: "80"
+  ADDONS: sale_management,stock,account_account,odoo_initializer,mrp,purchase,mrp_product_expiry,product_expiry,l10n_generic_coa
+  INITIALIZER_DATA_FILES_PATH: /opt/odoo-config
+  INITIALIZER_CONFIG_FILE_PATH: /opt/odoo-config/initializer_config.json
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -26,16 +29,16 @@ metadata:
 data:
   odoo.conf: |
     [options]
-    addons_path = /opt/bahmni-addons,/mnt/extra-addons
+    addons_path = /mnt/extra-addons,/opt/odoo/addons
     data_dir = /var/lib/odoo
-    initializer_data_files_paths = /opt/odoo-config,/opt/openmrs-config
-    proxy_mode = True
+    initializer_data_files_paths = ${INITIALIZER_DATA_FILES_PATH}
+    initializer_config_file_path = ${INITIALIZER_CONFIG_FILE_PATH}
     test_enable = False
     test_file = False
     without_demo = all
-    workers = 0
+    limit_time_real = 500
+    list_db = False
     admin_passwd = ${ODOO_MASTER_PASSWORD}
-    initializer_config_file_path = /opt/odoo-config/initializer_config.json
 ---
 apiVersion: v1
 kind: ConfigMap

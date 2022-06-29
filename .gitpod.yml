@@ -1,0 +1,6 @@
+tasks:
+  - name: Install dependencies
+    command: |
+      (cd /workspace && curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3)
+      chmod +x /workspace/get_helm.sh
+      /workspace/get_helm.sh
