@@ -210,9 +210,9 @@ spec:
 
         volumeMounts:
             - name: distro
-              subPath: "eip-client/config"
+              subPath: "eip_config/config"
               mountPath: "/config"
             - name: distro
-              subPath: "eip-client/routes"
+              subPath: "eip_config/routes"
               mountPath: "/routes"
 {{ end }}{{ end }}{{ end }}
