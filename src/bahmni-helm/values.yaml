@@ -151,7 +151,7 @@ apps:
       loadBalancerIP: ''
       port: 80
   eip_client:
-    image: mekomsolutions/eip-client:847ab3c
+    image: mekomsolutions/eip-client:544f084
     initImage: mariadb:10.3
     enabled: false
     MYSQL_DATABASE: openmrs
