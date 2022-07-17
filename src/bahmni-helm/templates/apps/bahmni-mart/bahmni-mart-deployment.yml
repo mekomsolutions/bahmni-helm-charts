@@ -27,7 +27,7 @@ spec:
             claimName: data-pvc
       initContainers:
         - name: init-db
-          image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_mart.initImage }}" 
+          image: "{{ .Values.apps.bahmni_mart.initImage }}" 
           volumeMounts:
             - name: mart-db-init
               mountPath: "/mnt/"
@@ -75,7 +75,7 @@ spec:
                   key: ANALYTICS_DB_PASSWORD
       containers:
       - name: bahmni-mart
-        image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_mart.image }}" 
+        image: "{{ .Values.apps.bahmni_mart.image }}" 
         resources:
             requests:
               memory: "{{  .Values.apps.bahmni_mart.resources.requests.memory }}"

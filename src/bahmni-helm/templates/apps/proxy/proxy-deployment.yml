@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: proxy
-        image: "{{ .Values.docker_registry }}/{{ .Values.apps.proxy.image }}" 
+        image: "{{ .Values.apps.proxy.image }}" 
         resources:
             requests:
               memory: "{{  .Values.apps.proxy.resources.requests.memory }}"

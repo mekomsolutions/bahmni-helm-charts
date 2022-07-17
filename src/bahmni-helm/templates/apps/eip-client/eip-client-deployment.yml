@@ -21,7 +21,7 @@ spec:
             name: eip-db
       initContainers:
         - name: init-db
-          image: "{{ .Values.docker_registry }}/{{ .Values.apps.eip_client.initImage }}"
+          image: "{{ .Values.apps.eip_client.initImage }}"
           volumeMounts:
             - name: eip-db
               mountPath: "/mnt/"
@@ -53,7 +53,7 @@ spec:
 
       containers:
       - name: eip-client
-        image: "{{ .Values.docker_registry }}/{{ .Values.apps.eip_client.image }}"
+        image: "{{ .Values.apps.eip_client.image }}"
         resources:
             requests:
               memory: "100Mi"

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: bahmni-config
-        image:  "{{ .Values.docker_registry }}/{{ .Values.apps.appointments.image }}"
+        image:  "{{ .Values.apps.appointments.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.appointments.resources.requests.memory }}"
