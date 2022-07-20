@@ -33,10 +33,10 @@ spec:
           emptyDir: {}
       initContainers:
         - name: wait-for-openmrs
-          image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.loggingImage }}"
+          image: "{{ .Values.apps.openelis.loggingImage }}"
           command: ['sh', '-c', "until wget --spider openmrs.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local:8080/openmrs; do echo 'Waiting for OpenMRS to be started...'; sleep 2; done"]
         - name: init-db
-          image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.initImage }}"
+          image: "{{ .Values.apps.openelis.initImage }}"
           volumeMounts:
             - name: openelis-db-init
               mountPath: "/mnt/"
@@ -85,13 +85,13 @@ spec:
       priorityClassName: high-priority
       containers:
       - name: logging
-        image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.loggingImage }}"
+        image: "{{ .Values.apps.openelis.loggingImage }}"
         args: [/bin/sh, -c, 'while ! tail -f /usr/local/tomcat/logs/openelis.log ; do sleep 1 ; done']
         volumeMounts:
           - name: log
             mountPath: /usr/local/tomcat/logs
       - name: openelis
-        image: "{{ .Values.docker_registry }}/{{ .Values.apps.openelis.image }}"
+        image: "{{ .Values.apps.openelis.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.openelis.resources.requests.memory }}"

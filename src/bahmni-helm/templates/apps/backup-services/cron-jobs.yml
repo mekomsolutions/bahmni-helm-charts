@@ -14,7 +14,7 @@ spec:
         spec:
           containers:
           - name: openmrs-db-backup
-            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.mysql.image }}
+            image: {{ .Values.apps.backup_services.apps.mysql.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -68,7 +68,7 @@ spec:
         spec:
           containers:
           - name: odoo-db-backup
-            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.postgres.image }}
+            image: {{ .Values.apps.backup_services.apps.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -124,7 +124,7 @@ spec:
         spec:
           containers:
           - name: filestore-backup
-            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.filestore.image }}
+            image: {{ .Values.apps.backup_services.apps.filestore.image }}
             env:
             - name: FILESTORE_PATH
               value: "/opt/data/"
@@ -165,7 +165,7 @@ spec:
         spec:
           containers:
           - name: metabase-db-backup
-            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.postgres.image }}
+            image: {{ .Values.apps.backup_services.apps.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:
@@ -220,7 +220,7 @@ spec:
         spec:
           containers:
           - name: openelis-db-backup
-            image: {{ .Values.docker_registry }}/{{ .Values.apps.backup_services.apps.postgres.image }}
+            image: {{ .Values.apps.backup_services.apps.postgres.image }}
             env:
             - name: DB_HOST
               valueFrom:

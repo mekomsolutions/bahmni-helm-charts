@@ -37,7 +37,7 @@ spec:
             claimName: data-pvc
       initContainers:
         - name: init-db
-          image: "{{ .Values.docker_registry }}/{{ .Values.apps.odoo.initImage }}"
+          image: "{{ .Values.apps.odoo.initImage }}"
           volumeMounts:
             - name: odoo-db
               mountPath: "/mnt/"
@@ -81,7 +81,7 @@ spec:
                   key: ODOO_DB_PASSWORD
       containers:
       - name: odoo
-        image: "{{ .Values.docker_registry }}/{{ .Values.apps.odoo.image }}"
+        image: "{{ .Values.apps.odoo.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.odoo.resources.requests.memory }}"

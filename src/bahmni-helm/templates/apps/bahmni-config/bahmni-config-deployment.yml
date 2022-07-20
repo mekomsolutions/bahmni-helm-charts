@@ -18,7 +18,7 @@ spec:
             claimName: distro-pvc
       containers:
       - name: bahmni-config
-        image: "{{ .Values.docker_registry }}/{{ .Values.apps.bahmni_config.image }}" 
+        image: "{{ .Values.apps.bahmni_config.image }}" 
         resources:
             requests:
               memory: "{{  .Values.apps.bahmni_config.resources.requests.memory }}"

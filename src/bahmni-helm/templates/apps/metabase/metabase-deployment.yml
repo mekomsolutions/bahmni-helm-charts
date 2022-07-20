@@ -18,7 +18,7 @@ spec:
             name: metabase-db
       initContainers:
         - name: init-db
-          image: "{{ .Values.docker_registry }}/{{ .Values.apps.metabase.initImage }}"
+          image: "{{ .Values.apps.metabase.initImage }}"
           volumeMounts:
             - name: metabase-db-config
               mountPath: "/mnt/"      
@@ -66,7 +66,7 @@ spec:
                   key: POSTGRES_HOST
       containers:
       - name: metabase
-        image: "{{ .Values.docker_registry }}/{{ .Values.apps.metabase.image }}"
+        image: "{{ .Values.apps.metabase.image }}"
         resources:
             requests:
               memory: "{{  .Values.apps.metabase.resources.requests.memory }}"
