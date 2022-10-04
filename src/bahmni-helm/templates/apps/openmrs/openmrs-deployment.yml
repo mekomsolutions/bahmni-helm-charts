@@ -108,6 +108,9 @@ spec:
             - name: data
               subPath: "openmrs/bahmni"
               mountPath: "/home/bahmni/"
+            - name: distro
+              subPath: "bahmni_config/openmrs/obscalculator"
+              mountPath: "/usr/local/tomcat/.OpenMRS/obscalculator/"
         ports:
         - name: openmrs-port
           containerPort: 8080
