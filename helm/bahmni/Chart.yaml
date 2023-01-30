@@ -1,0 +1,7 @@
+apiVersion: v2
+name: bahmni-helm
+description: A Helm chart to run Bahmni (OpenMRS, OpenELIS, Odoo...)
+
+type: application
+
+version: 1.0.0-dev
