@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 env:
   REPO_USER: ${{ secrets.NEXUS_USERNAME }}
