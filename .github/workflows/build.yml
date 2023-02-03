@@ -33,7 +33,7 @@ jobs:
         name: Rerieve chart version
         run: |
             VERSION=$(yq -r .version helm/bahmni/Chart.yaml)
-            echo "::set-env name=CHART_VERSION::$VERSION"
+            echo "CHART_VERSION=$VERSION" >> $GITHUB_ENV
       - 
         name: Package and push
         run: |
