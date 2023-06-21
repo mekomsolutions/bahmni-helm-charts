@@ -12,16 +12,8 @@ spec:
       labels:
         app: openmrs
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: "node-role.kubernetes.io/master"
-                operator: NotIn
-                values:
-                - "true"
+      nodeSelector:
+        kubernetes.io/hostname: worker1
       volumes:
         - name: openmrs-props
           configMap:

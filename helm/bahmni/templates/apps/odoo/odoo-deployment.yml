@@ -12,16 +12,8 @@ spec:
       labels:
         app: odoo
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: "node-role.kubernetes.io/master"
-                operator: NotIn
-                values:
-                - "true"
+      nodeSelector:
+        kubernetes.io/hostname: worker2
       volumes:
         - name: odoo-db
           configMap:
